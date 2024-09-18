@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "66d42fdb6eb9b976f48f9ba2"
+  },
+  "username": "administrator",
+  "password": "$2b$10$hJpgeI86ElGnK.fG/ZmOsOsrjPtSUTT92eCbEaLJKDKQMe5S49MGO",
+  "name": "Quản trị viên",
+  "role": "ROLE_ADMIN",
+  "createdAt": {
+    "$date": "2024-09-01T17:00:00.000Z"
+  },
+  "email": "administrator@localhost",
+  "updatedAt": {
+    "$date": "2024-09-02T11:36:56.564Z"
+  }
+}]
