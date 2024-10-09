@@ -1,5 +1,5 @@
+import { Partner } from '@gstb/entities/partner.entity';
 import { DataSource } from 'typeorm';
-import { Partner } from '../entities/PartnerEntity';
 
 export const UserProviders = [
   {

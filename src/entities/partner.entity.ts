@@ -5,8 +5,8 @@ import {
   OneToMany,
   Unique,
 } from 'typeorm';
-import { Product } from './ProductEntity';
-import { Warehouse } from './WarehouseEntity';
+import { Product } from './product.entity';
+import { Warehouse } from './warehouse.entity';
 
 @Entity()
 @Unique(['email'])
