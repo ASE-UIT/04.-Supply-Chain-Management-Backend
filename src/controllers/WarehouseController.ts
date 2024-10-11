@@ -11,7 +11,9 @@ export class WarehouseController {
     }
 
     @Delete('/:id')
-    async removeWarehouse(@Param('id') id: number) {
-        return this.warehouseService.remove(id);
+    async removeWarehouse(@Param('id') id: string) {
+        return this.warehouseService.remove(Number(id));
     }
 }
+
+

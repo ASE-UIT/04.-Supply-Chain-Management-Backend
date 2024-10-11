@@ -1,23 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Warehouse } from "../schemas/warehouse.schema"; // Sử dụng schema thay vì entity
+import { WarehouseInterface, WarehouseModal } from '../models/Warehouse';
 
 @Injectable()
 export class WarehouseService {
     constructor(
-        @InjectModel('Warehouse') private warehouseModel: Model<Warehouse>,
+        @InjectModel('Warehouse') private warehouseModel: Model<WarehouseInterface>,
     ) {}
 
-    async findOne(id: string): Promise<Warehouse> {
-        return this.warehouseModel.findById(id).exec(); // Dùng findById để tìm theo _id
+    async findOne(id: number): Promise<WarehouseModal> {
+        return this.warehouseModel.findById(id).exec(); 
     }
 
-    async findAll(): Promise<Warehouse[]> {
-        return this.warehouseModel.find().exec(); // Dùng find() để lấy tất cả
+    async findAll(): Promise<WarehouseModal[]> {
+        return this.warehouseModel.find().exec(); 
     }
 
-    async remove(id: string): Promise<any> {
-        return this.warehouseModel.findByIdAndDelete(id).exec(); // Dùng findByIdAndDelete để xóa
+    async remove(id: number): Promise<any> {
+        return this.warehouseModel.findByIdAndDelete(id).exec(); 
     }
 }

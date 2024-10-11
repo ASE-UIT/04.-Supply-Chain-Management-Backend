@@ -1,33 +1,18 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { Partner } from './partner.schema'; // Sử dụng schema thay vì entity
-import { Types } from 'mongoose';
+import { Schema } from 'mongoose';
 
-@Schema()
-export class Warehouse extends Document {
-  @Prop({ required: true })
-  name: string;
+// Định nghĩa WarehouseSchema
+export const WarehouseSchema = new Schema({
+    name: { type: String, required: true },   // Tên nhà kho
+    partner: { type: Schema.Types.ObjectId, ref: 'Partner', required: true },  // Liên kết đến đối tác 
+    ownerId: { type: Number, required: true },  // ID của chủ sở hữu
+    address: { type: String, required: true },  // Địa chỉ của nhà kho
+    type: { type: String, required: true },     // Loại nhà kho
+    status: { type: String, required: true },   // Trạng thái của nhà kho
+    capacity: { type: Number, required: true }, // Sức chứa của nhà kho
+    availability: { type: Boolean, required: true },  // Tình trạng sẵn sàng của nhà kho
+    createdAt: { type: Date, default: Date.now },  // Ngày tạo
+    updatedAt: { type: Date, default: Date.now },  // Ngày cập nhật
+    deletedAt: { type: Date, required: false },    // Ngày bị xóa (nếu có)
+}, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 
-  @Prop({ type: Types.ObjectId, ref: 'Partner' }) // Thay thế ManyToOne bằng ObjectId reference
-  partner: Partner;
 
-  @Prop({ required: true })
-  ownerId: number;
-
-  @Prop({ required: true })
-  address: string;
-
-  @Prop({ required: true })
-  type: string;
-
-  @Prop({ required: true })
-  status: string;
-
-  @Prop({ required: true })
-  capacity: number;
-
-  @Prop({ required: true })
-  availability: boolean;
-}
-
-export const WarehouseSchema = SchemaFactory.createForClass(Warehouse);
