@@ -1,23 +1,26 @@
 import { Injectable } from "@nestjs/common";
-import {  } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { WarehouseInterface, WarehouseModal } from '../models/Warehouse';
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Warehouse } from "../entities/warehouse.entity";
 
 @Injectable()
 export class WarehouseService {
-    constructor(
-        @InjectModel('Warehouse') private warehouseModel: Model<WarehouseInterface>,
-    ) {}
+    constructor( @InjectRepository(Warehouse) private readonly warehouseRepository: Repository<Warehouse>) {}
 
-    async findOne(id: number): Promise<WarehouseModal> {
-        return this.warehouseModel.findById(id).exec(); 
+    findAll(){
+        return this.warehouseRepository.find({where: {deletedAt: null}});
     }
 
-    async findAll(): Promise<WarehouseModal[]> {
-        return this.warehouseModel.find().exec(); 
+    findOne(id: number){
+        return this.warehouseRepository.findOne({where: {id, deletedAt: null}});
     }
 
-    async remove(id: number): Promise<any> {
-        return this.warehouseModel.findByIdAndDelete(id).exec(); 
+    async remove(id: number){
+        const warehouse = await this.findOne(id);
+        if (!warehouse) {
+            return 'Warehouse not found';
+        }
+        warehouse.deletedAt = new Date();
+        return this.warehouseRepository.save(warehouse);
     }
 }

@@ -29,4 +29,13 @@ export class Warehouse {
 
   @Column()
   availability: boolean;
+
+  @Column()
+  createdAt: Date;
+
+  @Column()
+  updatedAt: Date;
+
+  @Column()
+  deletedAt: Date;
 }
