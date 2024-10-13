@@ -11,4 +11,8 @@ export enum MessageCode {
 	UNKNOWN_ERROR = 'Lỗi không xác định',
     MISSING_REQUIRED_FIELD = "Thiếu thông tin bắt buộc",
 	PLEASE_FILL_ALL_REQUIRED_FIELDS = 'Vui lòng điền đầy đủ thông tin',
+	
+	CANNOT_CREATE_WAREHOUSE = 'Không thể tạo thông tin kho lúc này',
+    WAREHOUSE_ALREADY_EXISTED = 'Kho này đã tồn tại, hãy tạo kho khác',
+
 }
