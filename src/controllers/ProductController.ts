@@ -10,7 +10,7 @@ export class ProductController {
   // Get all products
   @Get()
   async getAllProducts(): Promise<Product[]> {
-    return this.productService.getAllProducts();
+    return this.productService.viewProductList();
   }
 
   // Delete a product by ID

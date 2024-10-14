@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WarehouseModule } from './modules/WarehouseModule';
 import { ProductModule } from './modules/ProductModule';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -12,10 +13,11 @@ import { ProductModule } from './modules/ProductModule';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: ['../src/entities/*.entity.ts'],
+      entities: ['/../entities/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     WarehouseModule,
+    ProductModule
   ],
 })
 export class AppModule {}
