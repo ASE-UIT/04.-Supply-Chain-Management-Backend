@@ -69,4 +69,21 @@ export class WarehouseService {
       );
     }
   }
+
+  async findAll(){
+    return await this.warehouseRepository.find({where: {deletedAt: null}});
+}
+
+  async findOne(id: number){
+      return await this.warehouseRepository.findOne({where: {id, deletedAt: null}});
+  }
+
+  async remove(id: number){
+      const warehouse = await this.findOne(id);
+      if (!warehouse) {
+          return 'Warehouse not found';
+      }
+      warehouse.deletedAt = new Date();
+      return this.warehouseRepository.save(warehouse);
+  }
 }
