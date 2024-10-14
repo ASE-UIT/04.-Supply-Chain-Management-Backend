@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductModule } from './modules/ProductModule';
 import { WarehouseModule } from './modules/WarehouseModule';
+import { ProductModule } from './modules/ProductModule';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -13,9 +13,8 @@ import { WarehouseModule } from './modules/WarehouseModule';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: ['../src/entities/*.entity.ts'],
-      synchronize: false,
+      synchronize: true,
     }),
-    ProductModule,
     WarehouseModule,
   ],
 })
