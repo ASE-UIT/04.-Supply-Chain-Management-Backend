@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Partner } from './partner.entity';
 
 @Entity()
-export class Warehouse {
+export  class Warehouse {
   @PrimaryGeneratedColumn()
   id: number;
 

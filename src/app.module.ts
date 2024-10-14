@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WarehouseModule } from './modules/WarehouseModule';
 
 @Module({
   imports: [
@@ -11,9 +12,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [],
+      entities: ['../src/entities/*.entity.ts'],
       synchronize: true,
     }),
+    WarehouseModule,
   ],
 })
 export class AppModule {}
