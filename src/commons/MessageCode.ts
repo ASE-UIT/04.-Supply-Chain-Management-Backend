@@ -15,4 +15,7 @@ export enum MessageCode {
 	CANNOT_CREATE_WAREHOUSE = 'Không thể tạo thông tin kho lúc này',
     WAREHOUSE_ALREADY_EXISTED = 'Kho này đã tồn tại, hãy tạo kho khác',
 
+	CANNOT_RETRIEVE_PRODUCTS = 'Không thể trích xuất sản phẩm',
+	PRODUCT_NOT_FOUND = 'Không tìm thấy sản phẩm này',
+	CANNOT_DELETE_PRODUCT = 'Không thể xóa sản phẩm này'
 }
