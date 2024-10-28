@@ -9,8 +9,7 @@ import { DeepPartial, Repository } from 'typeorm';
 @Injectable()
 export class WarehouseService {
   constructor(
-    @InjectRepository(Warehouse)
-    private readonly warehouseRepository: Repository<Warehouse>,
+    @InjectRepository(Warehouse) private readonly warehouseRepository: Repository<Warehouse>,
   ) {}
   async createWarehouse(
     createWarehouseDto: Warehouse_CreateWarehouseDto,

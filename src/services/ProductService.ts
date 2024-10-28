@@ -1,58 +1,62 @@
 import { MessageCode } from '@gstb/commons/MessageCode';
 import { ApplicationException } from '@gstb/controllers/ExceptionController';
+import { Product_CreateDto } from '@gstb/dtos/Product_CreateDto';
+import { Product_UpdateDto } from '@gstb/dtos/Product_UpdateDto';
 import { Product } from '@gstb/entities/product.entity'; // Adjust the import path according to your project structure
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectRepository(Product)
-    private readonly productRepository: Repository<Product>,
+    @InjectRepository(Product) private readonly productModel: Repository<Product>,
   ) { }
 
-  // view the list of products
-  async viewProductList(): Promise<any> {
-    try {
-      const products = await this.productRepository.find();
-      return {
-        message: 'Product list retrieved successfully',
-        data: products,
-      };
-    } catch (e) {
-      Logger.error('[Error] - ', e.message, null, null, true);
-      throw new ApplicationException(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        MessageCode.CANNOT_RETRIEVE_PRODUCTS,
-      );
-    }
+  async findAll(): Promise<Product[]> {
+    return await this.productModel.find({ withDeleted: false });
   }
 
-  // Method to delete a product by ID
-  async deleteProduct(productId: number): Promise<any> {
-    try {
-      const existingProduct = await this.productRepository.findOne({
-        where: { id: productId },
-      });
-
-      if (!existingProduct) {
-        throw new ApplicationException(
-          HttpStatus.NOT_FOUND,
-          MessageCode.PRODUCT_NOT_FOUND,
-        );
-      }
-
-      await this.productRepository.delete(productId);
-      return {
-        message: 'Product deleted successfully',
-      };
-    } catch (e) {
-      Logger.error('[Error] - ', e.message, null, null, true);
-      throw new ApplicationException(
-        HttpStatus.BAD_REQUEST,
-        MessageCode.CANNOT_DELETE_PRODUCT,
-      );
+  async findById(id: number): Promise<Product> {
+    const product = await this.productModel.findOne({ where: { id }, withDeleted: false });
+    if (!product) {
+      throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.PRODUCT_NOT_FOUND);
     }
+    return product;
+  }
+
+  async create(product: Product_CreateDto): Promise<Product> {
+    return await this.productModel.save({
+      ...product,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  async update(id: number, product: Product_UpdateDto): Promise<Product> {
+    const productToUpdate = await this.findById(id);
+    if (!productToUpdate) {
+      throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.PRODUCT_NOT_FOUND);
+    }
+
+    productToUpdate.name = product.name;
+    productToUpdate.quantity = product.quantity;
+    productToUpdate.unit = product.unit;
+    productToUpdate.status = product.status;
+    productToUpdate.type = product.type;
+    productToUpdate.size = product.size;
+    productToUpdate.weight = product.weight;
+    productToUpdate.updatedAt = new Date();
+
+    return await this.productModel.save(productToUpdate);
+  }
+
+  async delete(id: number): Promise<void> {
+    const productToDelete = await this.findById(id);
+    if (!productToDelete) {
+      throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.PRODUCT_NOT_FOUND);
+    }
+
+    await this.productModel.softDelete(id);
   }
 }
