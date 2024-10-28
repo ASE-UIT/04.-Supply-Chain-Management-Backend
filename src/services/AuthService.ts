@@ -3,24 +3,27 @@ import { MessageCode } from '@gstb/commons/MessageCode';
 import { ApplicationException } from '@gstb/controllers/ExceptionController';
 import { Auth_CreateUserDto } from '@gstb/dtos/Auth_CreateUserDto';
 import { Auth_LoginDto } from '@gstb/dtos/Auth_LoginDto';
-import { UserInterface, UserModal } from '@gstb/models/User';
+import { User } from '@gstb/entities/user.entity';
+import { UserModal } from '@gstb/models/User';
 import { StringUtils } from '@gstb/utils/StringUtils';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from 'mongoose';
+import { Repository } from 'typeorm';
 
 const bcrypt = require('bcrypt');
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectModel('User') private readonly userModel: Model<UserInterface>,
+        @InjectRepository(User) readonly userModel: Repository<User>,
         private readonly jwtService: JwtService
     ) {
     }
 
     async validateUser(payload: any): Promise<UserModal> {
-        return new UserModal(await this.userModel.findOne({ _id: payload.id }));
+        return new UserModal(await this.userModel.findOne({ where: { id: payload.id } }));
     }
 
     async login(userAuthDto: Auth_LoginDto): Promise<any> {
@@ -29,7 +32,7 @@ export class AuthService {
             const safePassword = StringUtils.xssPrevent(userAuthDto.password);
             Logger.log('[START] - Login with user: ' + safeUsername, null, false);
 
-            const user = await this.userModel.findOne({ username: safeUsername });
+            const user = await this.userModel.findOne({ where: { username: safeUsername } });
 
             if (!user) {
                 throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.USER_NOT_REGISTER);
@@ -42,7 +45,7 @@ export class AuthService {
             const userData = new UserModal(user);
 
             const JWT_Payload = {
-                id: user._id,
+                id: user.id,
                 username: user.username,
                 role: user.role,
                 name: user.name,
@@ -67,7 +70,7 @@ export class AuthService {
             }
 
             const username = StringUtils.xssPrevent(userDto.username);
-            const user = await this.userModel.findOne({ username: username });
+            const user = await this.userModel.findOne({ where: { username: username } });
             if (user) {
                 throw new ApplicationException(HttpStatus.BAD_REQUEST, MessageCode.USER_ALREADY_EXISTED);
             }
@@ -76,13 +79,12 @@ export class AuthService {
             const hash = bcrypt.hashSync(password, Constant.BCRYPT_ROUND);
             return {
                 message: "OK",
-                data: new UserModal(await this.userModel.create({
+                data: new UserModal(await this.userModel.save({
                     username: username,
                     password: hash,
                     role: userDto.role,
                     name: userDto.name,
                     email: userDto.email,
-                    description: userDto.description,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 }))
@@ -93,9 +95,9 @@ export class AuthService {
         }
     }
 
-    async changePassword(userId: string, newPassword: string): Promise<any> {
+    async changePassword(userId: number, newPassword: string): Promise<any> {
         try {
-            const user = await this.userModel.findOne({ _id: userId });
+            const user = await this.userModel.findOne({ where: { id: userId } });
             if (!user) {
                 throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.USER_NOT_FOUND);
             }
@@ -104,7 +106,7 @@ export class AuthService {
             const hash = bcrypt.hashSync(password, Constant.BCRYPT_ROUND);
             user.password = hash;
             user.updatedAt = new Date();
-            await user.save();
+            await this.userModel.save(user);
             return { message: "OK", data: new UserModal(user) };
         } catch (error) {
             Logger.error('[ERROR] - ' + error.message, null, null, true);

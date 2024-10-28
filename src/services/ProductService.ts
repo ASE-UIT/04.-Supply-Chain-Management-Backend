@@ -10,7 +10,7 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-  ) {}
+  ) { }
 
   // view the list of products
   async viewProductList(): Promise<any> {

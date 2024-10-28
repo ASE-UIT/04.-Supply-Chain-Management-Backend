@@ -11,6 +11,11 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/config/typeorm.ts",
+    "migration:generate": "npm run typeorm -- -d ./src/config/typeorm.ts migration:generate",
+    "migration:create": "npm run typeorm -- migration:create",
+    "migration:revert": "npm run typeorm -- -d ./src/config/typeorm.ts migration:revert",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {

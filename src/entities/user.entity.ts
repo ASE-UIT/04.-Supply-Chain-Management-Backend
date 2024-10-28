@@ -1,21 +1,35 @@
-import { Entity, PrimaryColumn, Column, Unique } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Unique, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-@Unique(['email'])
+@Unique(['username'])
 export class User {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  name: string;
+
+  @Column()
   username: string;
 
   @Column()
   password: string;
 
-  // Cột type
   @Column()
-  type: string;
+  role: string;
 
   @Column()
   email: string;
 
   @Column()
   phoneNumber: string;
+  
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

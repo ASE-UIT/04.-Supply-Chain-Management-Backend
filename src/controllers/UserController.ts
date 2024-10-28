@@ -24,7 +24,7 @@ export class UserController {
     @UseGuards(AuthGuard('jwt'))
     @ApiBearerAuth()
     @Role(SystemRoleEnum.ROLE_ADMIN)
-    async findOne(@Req() req, @Res() res, @Param('id') id: string) {
+    async findOne(@Req() req, @Res() res, @Param('id') id: number) {
         return res.status(HttpStatus.OK).json(await this.userService.findOne(id));
     }
 
@@ -32,7 +32,7 @@ export class UserController {
     @UseGuards(AuthGuard('jwt'), RoleGuard)
     @ApiBearerAuth()
     @Role(SystemRoleEnum.ROLE_ADMIN)
-    async update(@Req() req, @Res() res, @Param('id') id: string, @Body() data: User_UpdateDto) {
+    async update(@Req() req, @Res() res, @Param('id') id: number, @Body() data: User_UpdateDto) {
         return res.status(HttpStatus.OK).json(await this.userService.update(id, data));
     }
 
@@ -40,7 +40,7 @@ export class UserController {
     @UseGuards(AuthGuard('jwt'), RoleGuard)
     @ApiBearerAuth()
     @Role(SystemRoleEnum.ROLE_ADMIN)
-    async delete(@Req() req, @Res() res, @Param('id') id: string) {
+    async delete(@Req() req, @Res() res, @Param('id') id: number) {
         return res.status(HttpStatus.OK).json(await this.userService.remove(id));
     }
 
@@ -50,7 +50,7 @@ export class UserController {
     @UseGuards(AuthGuard('jwt'), RoleGuard)
     @ApiBearerAuth()
     @Role(SystemRoleEnum.ROLE_ADMIN)
-    async assignRole(@Req() req, @Res() res, @Query('userId') userId: string, @Query('role') role: SystemRoleEnum) {
+    async assignRole(@Req() req, @Res() res, @Query('userId') userId: number, @Query('role') role: SystemRoleEnum) {
         return res.status(HttpStatus.OK).json(await this.userService.updateRole(userId, role));
     }
 }

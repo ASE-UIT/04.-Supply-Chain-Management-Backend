@@ -9,7 +9,7 @@ import { MessageCode } from '@gstb/commons/MessageCode';
 @ApiTags('warehouse')
 @Controller('warehouses')
 export class WarehouseController {
-  constructor(private readonly warehouseService: WarehouseService) {}
+  constructor(private readonly warehouseService: WarehouseService) { }
 
   @Post()
   async createWarehouse(
@@ -34,8 +34,8 @@ export class WarehouseController {
   @ApiResponse({ status: 200, description: 'Return all warehouses.' })
   @ApiResponse({ status: 404, description: 'No warehouses found' })
   async findAll() {
-      Logger.log('WarehouseController:findAll');
-      return this.warehouseService.findAll();
+    Logger.log('WarehouseController:findAll');
+    return this.warehouseService.findAll();
   }
 
   @Delete('/:id')
@@ -43,11 +43,11 @@ export class WarehouseController {
   @ApiResponse({ status: 200, description: 'Warehouse has been soft deleted' })
   @ApiResponse({ status: 404, description: 'Warehouse not found' })
   async removeWarehouse(@Param('id') id: string) {
-      const warehouse = await this.warehouseService.findOne(parseInt(id));
-      if (!warehouse) {
-          return 'Warehouse not found';
-      }
-      return this.warehouseService.remove(parseInt(id));
+    const warehouse = await this.warehouseService.findOne(parseInt(id));
+    if (!warehouse) {
+      return 'Warehouse not found';
+    }
+    return this.warehouseService.remove(parseInt(id));
   }
 }
 

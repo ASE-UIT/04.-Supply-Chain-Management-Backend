@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 import { Partner } from './partner.entity';
 
 @Entity()
@@ -11,9 +11,6 @@ export  class Warehouse {
 
   @ManyToOne(() => Partner, (partner) => partner.warehouses)
   partner: Partner;
-
-  @Column()
-  ownerId: number;
 
   @Column()
   address: string;
@@ -30,12 +27,12 @@ export  class Warehouse {
   @Column()
   availability: boolean;
 
-  @Column()
-  createdAt: Date;
+  @CreateDateColumn()
+  createdAt!: Date;
 
-  @Column()
-  updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt!: Date;
 
-  @Column()
-  deletedAt: Date;
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

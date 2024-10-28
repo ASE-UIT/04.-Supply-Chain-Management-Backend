@@ -18,7 +18,6 @@ export class WarehouseService {
     try {
       const requiredFields = [
         'name',
-        'ownerId',
         'address',
         'type',
         'status',
@@ -46,7 +45,6 @@ export class WarehouseService {
 
       const newWarehouseData: DeepPartial<Warehouse> = {
         name: createWarehouseDto.name,
-        ownerId: createWarehouseDto.ownerId,
         address: createWarehouseDto.address,
         type: createWarehouseDto.type,
         status: createWarehouseDto.status,

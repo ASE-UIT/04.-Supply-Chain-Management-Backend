@@ -1,23 +1,24 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WarehouseModule } from './modules/WarehouseModule';
 import { ProductModule } from './modules/ProductModule';
+import typeorm from './config/typeorm';
+import { envFiles } from './config/env';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['local.env', 'staging.env', 'production.env'],
+      envFilePath: envFiles,
       isGlobal: true,
+      load: [typeorm]
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      entities: ['/../entities/*.entity{.ts,.js}'],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => (configService.get('typeorm'))
     }),
     WarehouseModule,
     ProductModule
   ],
 })
-export class AppModule {}
+export class AppModule { }

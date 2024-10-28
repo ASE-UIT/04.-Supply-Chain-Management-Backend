@@ -4,6 +4,9 @@ import {
   Column,
   OneToMany,
   Unique,
+  CreateDateColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { Warehouse } from './warehouse.entity';
@@ -22,6 +25,7 @@ export class Partner {
 
   @Column()
   email: string;
+
   @Column()
   phoneNumber: string;
 
@@ -30,4 +34,13 @@ export class Partner {
 
   @OneToMany(() => Warehouse, (warehouse) => warehouse.partner)
   warehouses: Warehouse[];
+  
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

@@ -1,0 +1,1 @@
+export const envFiles = ['local.env', 'staging.env', 'production.env'];

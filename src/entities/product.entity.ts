@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 import { Partner } from './partner.entity';
 
 @Entity()
@@ -22,9 +22,6 @@ export class Product {
   partner: Partner;
 
   @Column()
-  supplierId: number;
-
-  @Column()
   type: string;
 
   @Column('float')
@@ -32,4 +29,13 @@ export class Product {
 
   @Column('float')
   weight: number;
+  
+  @CreateDateColumn()
+  createdAt!: Date;
+
+  @UpdateDateColumn()
+  updatedAt!: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }
