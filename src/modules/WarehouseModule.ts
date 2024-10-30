@@ -1,7 +1,7 @@
-import { WarehouseController } from "@gstb/controllers/WarehouseController";
-import { User } from "@gstb/entities/user.entity";
-import { Warehouse } from "@gstb/entities/warehouse.entity";
-import { WarehouseService } from "@gstb/services/WarehouseService";
+import { WarehouseController } from "@scm/controllers/WarehouseController";
+import { User } from "@scm/entities/user.entity";
+import { Warehouse } from "@scm/entities/warehouse.entity";
+import { WarehouseService } from "@scm/services/WarehouseService";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 

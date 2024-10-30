@@ -1,5 +1,5 @@
-import { MessageCode } from '@gstb/commons/MessageCode';
-import { ApplicationException } from '@gstb/controllers/ExceptionController';
+import { MessageCode } from '@scm/commons/MessageCode';
+import { ApplicationException } from '@scm/controllers/ExceptionController';
 import { CanActivate, ExecutionContext, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 

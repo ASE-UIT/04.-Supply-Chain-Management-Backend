@@ -1,8 +1,8 @@
-import { User_UpdateDto } from '@gstb/dtos/User_UpdateDto';
-import { SystemRoleEnum } from '@gstb/enums/SystemRoleEnum';
-import { Role } from '@gstb/guards/RoleDecorator';
-import { RoleGuard } from '@gstb/guards/RoleGuard';
-import { UserService } from '@gstb/services/UserService';
+import { User_UpdateDto } from '@scm/dtos/User_UpdateDto';
+import { SystemRoleEnum } from '@scm/enums/SystemRoleEnum';
+import { Role } from '@scm/guards/RoleDecorator';
+import { RoleGuard } from '@scm/guards/RoleGuard';
+import { UserService } from '@scm/services/UserService';
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';

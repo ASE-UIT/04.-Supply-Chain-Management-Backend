@@ -1,9 +1,9 @@
-import { MessageCode } from '@gstb/commons/MessageCode';
-import { ApplicationException } from '@gstb/controllers/ExceptionController';
-import { User_UpdateDto } from '@gstb/dtos/User_UpdateDto';
-import { User } from '@gstb/entities/user.entity';
-import { SystemRoleEnum } from '@gstb/enums/SystemRoleEnum';
-import { UserModal } from '@gstb/models/User';
+import { MessageCode } from '@scm/commons/MessageCode';
+import { ApplicationException } from '@scm/controllers/ExceptionController';
+import { User_UpdateDto } from '@scm/dtos/User_UpdateDto';
+import { User } from '@scm/entities/user.entity';
+import { SystemRoleEnum } from '@scm/enums/SystemRoleEnum';
+import { UserModal } from '@scm/models/User';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { InjectRepository } from '@nestjs/typeorm';

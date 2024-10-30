@@ -1,9 +1,11 @@
 // src/controllers/product.controller.ts
-import { Product_CreateDto } from '@gstb/dtos/Product_CreateDto';
+import { Product_CreateDto } from '@scm/dtos/Product_CreateDto';
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { ProductService } from '../services/ProductService';
-import { Product_UpdateDto } from '@gstb/dtos/Product_UpdateDto';
+import { Product_UpdateDto } from '@scm/dtos/Product_UpdateDto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) { }

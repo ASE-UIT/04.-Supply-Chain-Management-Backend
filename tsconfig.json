@@ -13,7 +13,7 @@
     "incremental": true,
     "skipLibCheck": true,
     "paths": {
-      "@gstb/*": ["src/*"]
+      "@scm/*": ["src/*"]
     }
   }
 }

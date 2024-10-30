@@ -1,4 +1,4 @@
-import { SystemRoleEnum } from '@gstb/enums/SystemRoleEnum';
+import { SystemRoleEnum } from '@scm/enums/SystemRoleEnum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class Auth_CreateUserDto {

@@ -1,4 +1,4 @@
-import { SystemRoleEnum } from '@gstb/enums/SystemRoleEnum';
+import { SystemRoleEnum } from '@scm/enums/SystemRoleEnum';
 import { Schema } from 'mongoose';
 
 export const UserSchema = new Schema({

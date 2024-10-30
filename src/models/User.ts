@@ -1,4 +1,4 @@
-import { User } from "@gstb/entities/user.entity";
+import { User } from "@scm/entities/user.entity";
 
 export class UserModal {
     id: number;

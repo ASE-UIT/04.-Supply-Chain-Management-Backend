@@ -1,10 +1,10 @@
-import { Auth_ChangePasswordDto } from '@gstb/dtos/Auth_ChangePasswordDto';
-import { Auth_CreateUserDto } from '@gstb/dtos/Auth_CreateUserDto';
-import { Auth_LoginDto } from '@gstb/dtos/Auth_LoginDto';
-import { SystemRoleEnum } from '@gstb/enums/SystemRoleEnum';
-import { Role } from '@gstb/guards/RoleDecorator';
-import { RoleGuard } from '@gstb/guards/RoleGuard';
-import { AuthService } from '@gstb/services/AuthService';
+import { Auth_ChangePasswordDto } from '@scm/dtos/Auth_ChangePasswordDto';
+import { Auth_CreateUserDto } from '@scm/dtos/Auth_CreateUserDto';
+import { Auth_LoginDto } from '@scm/dtos/Auth_LoginDto';
+import { SystemRoleEnum } from '@scm/enums/SystemRoleEnum';
+import { Role } from '@scm/guards/RoleDecorator';
+import { RoleGuard } from '@scm/guards/RoleGuard';
+import { AuthService } from '@scm/services/AuthService';
 import { Body, Controller, Get, HttpStatus, Post, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';

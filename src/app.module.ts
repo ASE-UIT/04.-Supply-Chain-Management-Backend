@@ -5,6 +5,7 @@ import { WarehouseModule } from './modules/WarehouseModule';
 import { ProductModule } from './modules/ProductModule';
 import typeorm from './config/typeorm';
 import { envFiles } from './config/env';
+import { PartnerModule } from './modules/PartnerModule';
 
 @Module({
   imports: [
@@ -17,8 +18,9 @@ import { envFiles } from './config/env';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => (configService.get('typeorm'))
     }),
+    PartnerModule,
     WarehouseModule,
-    ProductModule
+    ProductModule,
   ],
 })
 export class AppModule { }

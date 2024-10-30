@@ -1,8 +1,8 @@
-import { Constant } from '@gstb/commons/Constant';
-import { AuthController } from '@gstb/controllers/AuthController';
-import { JwtStrategy } from '@gstb/guards/JWTStrategy';
-import { UserSchema } from '@gstb/schemas/UserSchema';
-import { AuthService } from '@gstb/services/AuthService';
+import { Constant } from '@scm/commons/Constant';
+import { AuthController } from '@scm/controllers/AuthController';
+import { JwtStrategy } from '@scm/guards/JWTStrategy';
+import { UserSchema } from '@scm/schemas/UserSchema';
+import { AuthService } from '@scm/services/AuthService';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';

@@ -1,4 +1,4 @@
-import { StringUtils } from '@gstb/utils/StringUtils';
+import { StringUtils } from '@scm/utils/StringUtils';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class Warehouse_CreateWarehouseDto {

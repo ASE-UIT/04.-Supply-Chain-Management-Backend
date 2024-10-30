@@ -1,8 +1,8 @@
-import { MessageCode } from '@gstb/commons/MessageCode';
-import { ApplicationException } from '@gstb/controllers/ExceptionController';
-import { Product_CreateDto } from '@gstb/dtos/Product_CreateDto';
-import { Product_UpdateDto } from '@gstb/dtos/Product_UpdateDto';
-import { Product } from '@gstb/entities/product.entity'; // Adjust the import path according to your project structure
+import { MessageCode } from '@scm/commons/MessageCode';
+import { ApplicationException } from '@scm/controllers/ExceptionController';
+import { Product_CreateDto } from '@scm/dtos/Product_CreateDto';
+import { Product_UpdateDto } from '@scm/dtos/Product_UpdateDto';
+import { Product } from '@scm/entities/product.entity'; // Adjust the import path according to your project structure
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

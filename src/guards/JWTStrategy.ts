@@ -1,7 +1,7 @@
-import { Constant } from '@gstb/commons/Constant';
-import { MessageCode } from '@gstb/commons/MessageCode';
-import { ApplicationException } from '@gstb/controllers/ExceptionController';
-import { AuthService } from '@gstb/services/AuthService';
+import { Constant } from '@scm/commons/Constant';
+import { MessageCode } from '@scm/commons/MessageCode';
+import { ApplicationException } from '@scm/controllers/ExceptionController';
+import { AuthService } from '@scm/services/AuthService';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';

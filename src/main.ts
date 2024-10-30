@@ -1,4 +1,4 @@
-import { AppModule } from '@gstb/app.module';
+import { AppModule } from '@scm/app.module';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -26,7 +26,7 @@ async function bootstrap() {
   app.enableCors({});
 
   const options = new DocumentBuilder()
-    .setTitle('Giam sat thiet bi')
+    .setTitle('Supply chain API')
     .setVersion('1.0')
     .addBearerAuth();
 

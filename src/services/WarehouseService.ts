@@ -1,7 +1,7 @@
-import { MessageCode } from '@gstb/commons/MessageCode';
-import { ApplicationException } from '@gstb/controllers/ExceptionController';
-import { Warehouse_CreateWarehouseDto } from '@gstb/dtos/Warehouse_CreateWarehouseDto';
-import { Warehouse } from '@gstb/entities/warehouse.entity';
+import { MessageCode } from '@scm/commons/MessageCode';
+import { ApplicationException } from '@scm/controllers/ExceptionController';
+import { Warehouse_CreateWarehouseDto } from '@scm/dtos/Warehouse_CreateWarehouseDto';
+import { Warehouse } from '@scm/entities/warehouse.entity';
 import { HttpCode, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
@@ -10,8 +10,8 @@ import { DeepPartial, Repository } from 'typeorm';
 export class WarehouseService {
   constructor(
     @InjectRepository(Warehouse) private readonly warehouseRepository: Repository<Warehouse>,
-  ) {}
-  async createWarehouse(
+  ) { }
+  async create(
     createWarehouseDto: Warehouse_CreateWarehouseDto,
   ): Promise<any> {
     try {
@@ -67,20 +67,45 @@ export class WarehouseService {
     }
   }
 
-  async findAll(){
-    return await this.warehouseRepository.find({where: {deletedAt: null}});
-}
-
-  async findOne(id: number){
-      return await this.warehouseRepository.findOne({where: {id, deletedAt: null}});
+  async findAll() {
+    return await this.warehouseRepository.find({ withDeleted: false });
   }
 
-  async remove(id: number){
-      const warehouse = await this.findOne(id);
+  async findById(id: number) {
+    const warehoust = await this.warehouseRepository.findOne({ where: { id }, withDeleted: false });
+    if (!warehoust) {
+      return 'Warehouse not found';
+    }
+    return warehoust;
+  }
+
+  async delete(id: number) {
+    const warehouse = await this.warehouseRepository.findOne({ where: { id }, withDeleted: false });
+    if (!warehouse) {
+      return 'Warehouse not found';
+    }
+    return this.warehouseRepository.softRemove(warehouse);
+  }
+
+  async update(id: number, updateWarehouseDto: Warehouse_CreateWarehouseDto) {
+    try {
+      const warehouse = await this.warehouseRepository.findOne({ where: { id }, withDeleted: false });
       if (!warehouse) {
-          return 'Warehouse not found';
+        return 'Warehouse not found';
       }
-      warehouse.deletedAt = new Date();
+      warehouse.name = updateWarehouseDto.name;
+      warehouse.address = updateWarehouseDto.address;
+      warehouse.type = updateWarehouseDto.type;
+      warehouse.status = updateWarehouseDto.status;
+      warehouse.capacity = updateWarehouseDto.capacity;
+      warehouse.availability = updateWarehouseDto.availability;
       return this.warehouseRepository.save(warehouse);
+    } catch (e) {
+      Logger.error('[Error] - ', e.message, null, null, true);
+      throw new ApplicationException(
+        HttpStatus.BAD_REQUEST,
+        MessageCode.UNKNOWN_ERROR,
+      );
+    }
   }
 }
