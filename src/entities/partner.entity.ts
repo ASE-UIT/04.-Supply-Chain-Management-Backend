@@ -12,7 +12,6 @@ import { Product } from './product.entity';
 import { Warehouse } from './warehouse.entity';
 
 @Entity()
-@Unique(['email'])
 export class Partner {
   @PrimaryGeneratedColumn()
   id: number;

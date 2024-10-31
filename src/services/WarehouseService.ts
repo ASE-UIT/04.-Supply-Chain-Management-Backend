@@ -24,22 +24,12 @@ export class WarehouseService {
         'availability',
       ];
       for (const field of requiredFields) {
-        if (!createWarehouseDto[field]) {
+        if (!createWarehouseDto.hasOwnProperty(field)) {
           throw new ApplicationException(
             HttpStatus.BAD_REQUEST,
             MessageCode.PLEASE_FILL_ALL_REQUIRED_FIELDS,
           );
         }
-      }
-
-      const existingWarehouse = await this.warehouseRepository.findOne({
-        where: { name: createWarehouseDto.name },
-      });
-      if (existingWarehouse) {
-        throw new ApplicationException(
-          HttpStatus.BAD_REQUEST,
-          MessageCode.WAREHOUSE_ALREADY_EXISTED,
-        );
       }
 
       const newWarehouseData: DeepPartial<Warehouse> = {
@@ -54,10 +44,7 @@ export class WarehouseService {
       const savedWarehouse =
         await this.warehouseRepository.save(newWarehouseData);
 
-      return {
-        message: 'Tạo thành công thông tin kho',
-        data: savedWarehouse,
-      };
+      return savedWarehouse;
     } catch (e) {
       Logger.error('[Error] - ', e.message, null, null, true);
       throw new ApplicationException(
