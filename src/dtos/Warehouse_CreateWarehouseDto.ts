@@ -1,5 +1,6 @@
 import { StringUtils } from '@scm/utils/StringUtils';
 import { ApiProperty } from '@nestjs/swagger';
+import { ProductTypeEnum } from '@scm/enums/ProductTypeEnum';
 
 export class Warehouse_CreateWarehouseDto {
   @ApiProperty({ type: String, required: true })
@@ -8,8 +9,8 @@ export class Warehouse_CreateWarehouseDto {
   readonly ownerId: number;
   @ApiProperty({ type: String, required: true })
   readonly address: string;
-  @ApiProperty({ type: String, required: true })
-  readonly type: string;
+  @ApiProperty({ type: String, required: true, enum: Object.values(ProductTypeEnum) })
+  readonly type: ProductTypeEnum;
   @ApiProperty({ type: String, required: true })
   readonly status: string;
   @ApiProperty({ type: Number, required: true })

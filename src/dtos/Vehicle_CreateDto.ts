@@ -1,21 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProductTypeEnum } from '@scm/enums/ProductTypeEnum';
 
-export class Product_CreateDto {
+export class Vehicle_CreateDto {
     @ApiProperty({ type: String, required: true })
-    readonly name: string;
+    readonly licensePlate: string;
     @ApiProperty({ type: Number, required: true })
-    readonly ownerId: number;
+    readonly partnerId: number;
     @ApiProperty({ type: Number, required: true })
-    readonly quantity: number;
-    @ApiProperty({ type: String, required: true })
-    readonly unit: string;
-    @ApiProperty({ type: String, required: true })
-    readonly status: string;
+    readonly driverId: number;
     @ApiProperty({ type: String, required: true, enum: Object.values(ProductTypeEnum) })
     readonly type: ProductTypeEnum;
+    @ApiProperty({ type: String, required: true })
+    readonly status: string;
     @ApiProperty({ type: Number, required: true })
-    readonly size: number;
-    @ApiProperty({ type: Number, required: true })
-    readonly weight: number;
+    readonly capacity: number;
+    @ApiProperty({ type: Boolean, required: true })
+    readonly availability: boolean;
 }

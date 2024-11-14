@@ -5,11 +5,13 @@ import { Partner } from '@scm/entities/partner.entity'; // Adjust the import pat
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LegalPerson } from '@scm/entities/legal_person.entity';
 
 @Injectable()
 export class PartnerService {
   constructor(
     @InjectRepository(Partner) private readonly partnerModel: Repository<Partner>,
+    @InjectRepository(LegalPerson) private readonly legalPersonModel: Repository<LegalPerson>,
   ) { }
 
   async findAll(): Promise<Partner[]> {
@@ -25,8 +27,19 @@ export class PartnerService {
   }
 
   async create(partner: Partner_CreateDto): Promise<Partner> {
+    const legalPerson = await this.legalPersonModel.findOne({ where: { id: partner.legalPersonId }, withDeleted: false });
+    if (!legalPerson) {
+      throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.LEGAL_PERSON_NOT_FOUND);
+    }
+
+
+
     return await this.partnerModel.save({
-      ...partner,
+      name: partner.name,
+      type: partner.type,
+      email: partner.email,
+      phoneNumber: partner.phoneNumber,
+      legalPerson,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -36,6 +49,14 @@ export class PartnerService {
     const partnerToUpdate = await this.findById(id);
     if (!partnerToUpdate) {
       throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.PRODUCT_NOT_FOUND);
+    }
+
+    if (partner.legalPersonId) {
+      const legalPerson = await this.legalPersonModel.findOne({ where: { id: partner.legalPersonId }, withDeleted: false });
+      if (!legalPerson) {
+        throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.LEGAL_PERSON_NOT_FOUND);
+      }
+      partnerToUpdate.legalPerson = legalPerson;
     }
 
     partnerToUpdate.name = partner.name;

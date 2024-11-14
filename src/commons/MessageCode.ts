@@ -17,5 +17,31 @@ export enum MessageCode {
 
 	CANNOT_RETRIEVE_PRODUCTS = 'Không thể trích xuất sản phẩm',
 	PRODUCT_NOT_FOUND = 'Không tìm thấy sản phẩm này',
-	CANNOT_DELETE_PRODUCT = 'Không thể xóa sản phẩm này'
+	CANNOT_DELETE_PRODUCT = 'Không thể xóa sản phẩm này',
+
+	LEGAL_PERSON_NOT_FOUND = 'Không tìm thấy thông tin người đại diện',
+	CANNOT_CREATE_LEGAL_PERSON = 'Không thể tạo thông tin người đại diện lúc này',
+	LEGAL_PERSON_ALREADY_EXISTED = 'Người đại diện này đã tồn tại, hãy tạo người đại diện khác',
+	CANNOT_DELETE_LEGAL_PERSON = 'Không thể xóa người đại diện này',
+
+	CANNOT_CREATE_PARTNER = 'Không thể tạo thông tin đối tác lúc này',
+	PARTNER_ALREADY_EXISTED = 'Đối tác này đã tồn tại, hãy tạo đối tác khác',
+	CANNOT_DELETE_PARTNER = 'Không thể xóa đối tác này',
+	PARTNER_NOT_FOUND = 'Không tìm thấy đối tác này',
+	INVALID_PARTNER_TYPE = 'Loại đối tác không hợp lệ',
+
+	CANNOT_CREATE_ORDER = 'Không thể tạo đơn hàng lúc này',
+	ORDER_NOT_FOUND = 'Không tìm thấy đơn hàng này',
+	CANNOT_DELETE_ORDER = 'Không thể xóa đơn hàng này',
+	ORDER_ALREADY_EXISTED = 'Đơn hàng này đã tồn tại, hãy tạo đơn hàng khác',
+
+	CANNOT_CREATE_DRIVER = 'Không thể tạo thông tin tài xế lúc này',
+	DRIVER_ALREADY_EXISTED = 'Tài xế này đã tồn tại, hãy tạo tài xế khác',
+	CANNOT_DELETE_DRIVER = 'Không thể xóa tài xế này',
+	DRIVER_NOT_FOUND = 'Không tìm thấy tài xế này',
+
+	CANNOT_CREATE_VEHICLE = 'Không thể tạo thông tin xe lúc này',
+	VEHICLE_ALREADY_EXISTED = 'Xe này đã tồn tại, hãy tạo xe khác',
+	CANNOT_DELETE_VEHICLE = 'Không thể xóa xe này',
+	VEHICLE_NOT_FOUND = 'Không tìm thấy xe này',
 }
