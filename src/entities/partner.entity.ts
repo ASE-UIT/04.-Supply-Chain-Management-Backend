@@ -13,6 +13,7 @@ import {
 import { Product } from './product.entity';
 import { Warehouse } from './warehouse.entity';
 import { LegalPerson } from './legal_person.entity';
+import { Vehicle } from './vehicle.entity';
 
 @Entity()
 export class Partner {
@@ -40,6 +41,9 @@ export class Partner {
 
   @OneToMany(() => Warehouse, (warehouse) => warehouse.partner)
   warehouses: Warehouse[];
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.partner)
+  vehicles: Vehicle[];
   
   @CreateDateColumn()
   createdAt!: Date;

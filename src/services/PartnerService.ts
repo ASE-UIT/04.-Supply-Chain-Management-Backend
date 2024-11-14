@@ -32,8 +32,6 @@ export class PartnerService {
       throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.LEGAL_PERSON_NOT_FOUND);
     }
 
-
-
     return await this.partnerModel.save({
       name: partner.name,
       type: partner.type,

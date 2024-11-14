@@ -10,7 +10,7 @@ export  class Vehicle {
   @Column()
   licensePlate: string;
 
-  @ManyToOne(() => Partner, (partner) => partner.warehouses)
+  @ManyToOne(() => Partner, (partner) => partner.vehicles)
   partner: Partner;
 
   @OneToOne(type => Driver, driver => driver.vehicle)

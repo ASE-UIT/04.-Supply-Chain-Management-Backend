@@ -18,23 +18,6 @@ export class WarehouseService {
     createWarehouseDto: Warehouse_CreateWarehouseDto,
   ): Promise<any> {
     try {
-      const requiredFields = [
-        'name',
-        'address',
-        'type',
-        'status',
-        'capacity',
-        'availability',
-      ];
-      for (const field of requiredFields) {
-        if (!createWarehouseDto.hasOwnProperty(field)) {
-          throw new ApplicationException(
-            HttpStatus.BAD_REQUEST,
-            MessageCode.PLEASE_FILL_ALL_REQUIRED_FIELDS,
-          );
-        }
-      }
-
       const partner = await this.partnerRepository.findOne({
         where: { id: createWarehouseDto.ownerId },
         withDeleted: false,
