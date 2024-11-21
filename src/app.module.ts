@@ -6,6 +6,7 @@ import { ProductModule } from './modules/ProductModule';
 import typeorm from './config/typeorm';
 import { envFiles } from './config/env';
 import { PartnerModule } from './modules/PartnerModule';
+import { OrderModule } from './modules/OrderModule';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PartnerModule } from './modules/PartnerModule';
     PartnerModule,
     WarehouseModule,
     ProductModule,
+    OrderModule
   ],
 })
 export class AppModule { }
