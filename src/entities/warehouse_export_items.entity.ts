@@ -1,16 +1,16 @@
 import { Entity, PrimaryGeneratedColumn, Column,OneToOne, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, W } from 'typeorm';
-import { WarehouseDocument } from './warehouse_documents.entity';
+import { WarehouseExportOrder } from './warehouse_export_order.entity';
 import { Partner } from './partner.entity';
 @Entity()
-export  class WarehouseDocumentItem {
+export  class WarehouseExportItem {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @ManyToOne( () => WarehouseDocument, (document) => document.items)
-  document: WarehouseDocument;
+  @ManyToOne( () => WarehouseExportOrder, (document) => document.items)
+  document: WarehouseExportOrder;
 
   @Column()
   price: number;

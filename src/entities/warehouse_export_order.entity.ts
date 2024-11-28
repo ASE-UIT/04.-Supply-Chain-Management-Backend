@@ -1,18 +1,18 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, OneToMany, OneToOne } from 'typeorm';
-import { WarehouseDocumentItem } from './warehouse_document_items.entity';
+import { WarehouseExportItem } from './warehouse_export_items.entity';
 import { Warehouse } from './warehouse.entity';
 import { User } from './user.entity';
 
 @Entity()
-export  class WarehouseDocument {
+export  class WarehouseExportOrder {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @OneToMany(() => WarehouseDocumentItem, (item) => item.document)
-  items: WarehouseDocumentItem[];
+  @OneToMany(() => WarehouseExportItem, (item) => item.document)
+  items: WarehouseExportItem[];
 
   @Column()
   type: string;
