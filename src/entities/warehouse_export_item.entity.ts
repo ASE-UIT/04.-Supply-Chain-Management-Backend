@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column,OneToOne, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, W } from 'typeorm';
 import { WarehouseExportOrder } from './warehouse_export_order.entity';
 import { Partner } from './partner.entity';
+
 @Entity()
 export  class WarehouseExportItem {
   @PrimaryGeneratedColumn()
@@ -13,16 +14,22 @@ export  class WarehouseExportItem {
   document: WarehouseExportOrder;
 
   @Column()
-  price: number;
+  price: number; // Đơn giá
 
   @Column()
-  lotNumber: number;
+  lotNumber: number; // Số lô
 
   @OneToOne(()=> Partner, (partner) => partner.id)
   partner: Partner;
 
   @Column()
-  quanity: number;
+  quantityDocument: number;  // Số lượng xuất theo chứng từ
+
+  @Column()
+  quantityActual: number;  // Số lượng xuất thực tế
+
+  @Column()
+  totalAmount: number;  // Tổng tiền
 
   @CreateDateColumn()
   createdAt!: Date;

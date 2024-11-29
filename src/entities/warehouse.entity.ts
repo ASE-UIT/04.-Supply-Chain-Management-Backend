@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
 import { Partner } from './partner.entity';
-import { WarehouseDocument} from './warehouse_documents.entity'
+import { WarehouseExportOrder} from './warehouse_export_order.entity'
 @Entity()
 export  class Warehouse {
   @PrimaryGeneratedColumn()
@@ -12,11 +12,11 @@ export  class Warehouse {
   @ManyToOne(() => Partner, (partner) => partner.warehouses)
   partner: Partner;
 
-  @OneToOne(() => WarehouseDocument, (doc) => doc.fromWarehouse)
-  exportFrom: WarehouseDocument;
+  @OneToOne(() => WarehouseExportOrder, (doc) => doc.fromWarehouse)
+  exportFrom: WarehouseExportOrder;
 
-  @OneToOne(() => WarehouseDocument, (doc) => doc.toWarehouse)
-  exportTo: WarehouseDocument;
+  @OneToOne(() => WarehouseExportOrder, (doc) => doc.toWarehouse)
+  exportTo: WarehouseExportOrder;
 
   @Column()
   address: string;

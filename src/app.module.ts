@@ -9,6 +9,7 @@ import { PartnerModule } from './modules/PartnerModule';
 import { ProductModule } from './modules/ProductModule';
 import { VehicleModule } from './modules/VehicleModule';
 import { WarehouseModule } from './modules/WarehouseModule';
+import { WarehouseExportModule } from './modules/WarehouseExportModule';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { WarehouseModule } from './modules/WarehouseModule';
     ProductModule,
     VehicleModule,
     DriverModule,
+    WarehouseExportModule
   ],
 })
 export class AppModule { }

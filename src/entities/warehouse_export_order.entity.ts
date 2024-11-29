@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, OneToMany, OneToOne } from 'typeorm';
-import { WarehouseExportItem } from './warehouse_export_items.entity';
+import { WarehouseExportItem } from './warehouse_export_item.entity';
 import { Warehouse } from './warehouse.entity';
 import { User } from './user.entity';
 
@@ -31,6 +31,9 @@ export  class WarehouseExportOrder {
 
   @OneToOne(() => User, (user) => user.id)
   approvedBy: User;
+
+  @Column({ type: 'decimal', default: 0 })
+  totalAmount: number;  // Tổng thành tiền của phiếu xuất
 
   @CreateDateColumn()
   createdAt!: Date;
