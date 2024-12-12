@@ -44,4 +44,12 @@ export enum MessageCode {
 	VEHICLE_ALREADY_EXISTED = 'Xe này đã tồn tại, hãy tạo xe khác',
 	CANNOT_DELETE_VEHICLE = 'Không thể xóa xe này',
 	VEHICLE_NOT_FOUND = 'Không tìm thấy xe này',
+
+	CANNOT_CREATE_WAREHOUSE_EXPORT_ORDER = 'Không thể tạo thông tin xuất kho lúc này',
+	WAREHOUSE_EXPORT_ORDER_NOT_FOUND = 'Không tìm thấy thông tin xuất kho này',
+	CANNOT_DELETE_WAREHOUSE_EXPORT_ORDER = 'Không thể xóa thông tin xuất kho này',
+	CANNOT_UPDATE_WAREHOUSE_EXPORT_ORDER = 'Không thể cập nhật thông tin xuất kho này',
+	WAREHOUSE_NOT_FOUND = 'Không tìm thấy kho này',
+
+	WAREHOUSE_EXPORT_ITEM_NOT_FOUND = 'Không tìm thấy thông tin sản phẩm xuất kho này',
 }

@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, Unique, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Unique, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
+import { WarehouseExportOrder} from './warehouse_export_order.entity'
 
 @Entity()
 @Unique(['username'])
@@ -32,4 +33,11 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @OneToOne(() => WarehouseExportOrder, (doc) => doc.createdBy)
+  createdExport: WarehouseExportOrder[];
+
+  @OneToOne(() => WarehouseExportOrder, (doc) => doc.approvedBy)
+  approvedExport: WarehouseExportOrder[];
+
 }
