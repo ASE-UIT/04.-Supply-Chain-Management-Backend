@@ -6,6 +6,7 @@ import typeorm from './config/typeorm';
 import { DriverModule } from './modules/DriverModule';
 import { LegalPersonModule } from './modules/LegalPersonModule';
 import { PartnerModule } from './modules/PartnerModule';
+import { OrderModule } from './modules/OrderModule';
 import { ProductModule } from './modules/ProductModule';
 import { VehicleModule } from './modules/VehicleModule';
 import { WarehouseModule } from './modules/WarehouseModule';
@@ -26,6 +27,7 @@ import { WarehouseExportModule } from './modules/WarehouseExportModule';
     PartnerModule,
     WarehouseModule,
     ProductModule,
+    OrderModule,
     VehicleModule,
     DriverModule,
     WarehouseExportModule
