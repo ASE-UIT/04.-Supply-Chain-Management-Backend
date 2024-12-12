@@ -1,45 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProductTypeEnum } from '@scm/enums/ProductTypeEnum';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class Product_CreateDto {
+export class Vehicle_CreateDto {
     @ApiProperty({ type: String, required: true })
     @IsNotEmpty()
     @IsString()
-    readonly name: string;
+    readonly licensePlate: string;
 
     @ApiProperty({ type: Number, required: true })
     @IsNotEmpty()
     @IsNumber()
-    readonly ownerId: number;
+    readonly partnerId: number;
 
     @ApiProperty({ type: Number, required: true })
     @IsNotEmpty()
     @IsNumber()
-    readonly quantity: number;
-
-    @ApiProperty({ type: String, required: true })
-    @IsNotEmpty()
-    @IsString()
-    readonly unit: string;
-
-    @ApiProperty({ type: String, required: true })
-    @IsNotEmpty()
-    @IsString()
-    readonly status: string;
+    readonly driverId: number;
 
     @ApiProperty({ type: String, required: true, enum: Object.values(ProductTypeEnum) })
     @IsNotEmpty()
     @IsEnum(ProductTypeEnum)
     readonly type: ProductTypeEnum;
 
-    @ApiProperty({ type: Number, required: true })
+    @ApiProperty({ type: String, required: true })
     @IsNotEmpty()
-    @IsNumber()
-    readonly size: number;
+    @IsString()
+    readonly status: string;
 
     @ApiProperty({ type: Number, required: true })
     @IsNotEmpty()
     @IsNumber()
-    readonly weight: number;
+    readonly capacity: number;
+
+    @ApiProperty({ type: Boolean, required: true })
+    @IsNotEmpty()
+    @IsBoolean()
+    readonly availability: boolean;
 }

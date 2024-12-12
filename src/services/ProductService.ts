@@ -6,11 +6,14 @@ import { Product } from '@scm/entities/product.entity'; // Adjust the import pat
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Partner } from '@scm/entities/partner.entity';
+import { PartnerTypeEnum } from '@scm/enums/PartnerTypeEnum';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product) private readonly productModel: Repository<Product>,
+    @InjectRepository(Partner) private readonly partnerModel: Repository<Partner>,
   ) { }
 
   async findAll(): Promise<Product[]> {
@@ -26,8 +29,24 @@ export class ProductService {
   }
 
   async create(product: Product_CreateDto): Promise<Product> {
+    const partner = await this.partnerModel.findOne({ where: { id: product.ownerId }, withDeleted: false });
+    if (!partner) {
+      throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.PARTNER_NOT_FOUND);
+    }
+
+    if (partner.type !== PartnerTypeEnum.PARTNER_SUPPLIER) {
+      throw new ApplicationException(HttpStatus.BAD_REQUEST, MessageCode.INVALID_PARTNER_TYPE);
+    }
+
     return await this.productModel.save({
-      ...product,
+      name: product.name,
+      quantity: product.quantity,
+      unit: product.unit,
+      status: product.status,
+      type: product.type,
+      size: product.size,
+      weight: product.weight,
+      partner: partner,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -37,6 +56,18 @@ export class ProductService {
     const productToUpdate = await this.findById(id);
     if (!productToUpdate) {
       throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.PRODUCT_NOT_FOUND);
+    }
+
+    if (product.ownerId) {
+      const partner = await this.partnerModel.findOne({ where: { id: product.ownerId }, withDeleted: false });
+      if (!partner) {
+        throw new ApplicationException(HttpStatus.NOT_FOUND, MessageCode.PARTNER_NOT_FOUND);
+      }
+
+      if (partner.type !== PartnerTypeEnum.PARTNER_SUPPLIER) {
+        throw new ApplicationException(HttpStatus.BAD_REQUEST, MessageCode.INVALID_PARTNER_TYPE);
+      }
+      productToUpdate.partner = partner;
     }
 
     productToUpdate.name = product.name;

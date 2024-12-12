@@ -5,31 +5,36 @@ import { Warehouse } from '@scm/entities/warehouse.entity';
 import { HttpCode, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
+import { Partner } from '@scm/entities/partner.entity';
+import { PartnerTypeEnum } from '@scm/enums/PartnerTypeEnum';
 
 @Injectable()
 export class WarehouseService {
   constructor(
     @InjectRepository(Warehouse) private readonly warehouseRepository: Repository<Warehouse>,
+    @InjectRepository(Partner) private readonly partnerRepository: Repository<Partner>,
   ) { }
   async create(
     createWarehouseDto: Warehouse_CreateWarehouseDto,
   ): Promise<any> {
     try {
-      const requiredFields = [
-        'name',
-        'address',
-        'type',
-        'status',
-        'capacity',
-        'availability',
-      ];
-      for (const field of requiredFields) {
-        if (!createWarehouseDto.hasOwnProperty(field)) {
-          throw new ApplicationException(
-            HttpStatus.BAD_REQUEST,
-            MessageCode.PLEASE_FILL_ALL_REQUIRED_FIELDS,
-          );
-        }
+      const partner = await this.partnerRepository.findOne({
+        where: { id: createWarehouseDto.ownerId },
+        withDeleted: false,
+      });
+
+      if (!partner) {
+        throw new ApplicationException(
+          HttpStatus.BAD_REQUEST,
+          MessageCode.PARTNER_NOT_FOUND,
+        );
+      }
+
+      if (partner.type !== PartnerTypeEnum.PARTNER_WAREHOUSE ) {
+        throw new ApplicationException(
+          HttpStatus.BAD_REQUEST,
+          MessageCode.INVALID_PARTNER_TYPE,
+        );
       }
 
       const newWarehouseData: DeepPartial<Warehouse> = {
@@ -39,6 +44,7 @@ export class WarehouseService {
         status: createWarehouseDto.status,
         capacity: createWarehouseDto.capacity,
         availability: createWarehouseDto.availability,
+        partner: partner,
       };
 
       const savedWarehouse =
@@ -46,6 +52,9 @@ export class WarehouseService {
 
       return savedWarehouse;
     } catch (e) {
+      if (e instanceof ApplicationException) {
+        throw e;
+      }
       Logger.error('[Error] - ', e.message, null, null, true);
       throw new ApplicationException(
         HttpStatus.BAD_REQUEST,
@@ -80,6 +89,27 @@ export class WarehouseService {
       if (!warehouse) {
         return 'Warehouse not found';
       }
+
+      if (updateWarehouseDto.ownerId) {
+        const partner = await this.partnerRepository.findOne({
+          where: { id: updateWarehouseDto.ownerId },
+          withDeleted: false,
+        });
+        if (!partner) {
+          throw new ApplicationException(
+            HttpStatus.BAD_REQUEST,
+            MessageCode.PARTNER_NOT_FOUND,
+          );
+        }
+        if (partner.type !== PartnerTypeEnum.PARTNER_WAREHOUSE) {
+          throw new ApplicationException(
+            HttpStatus.BAD_REQUEST,
+            MessageCode.INVALID_PARTNER_TYPE,
+          );
+        }
+        warehouse.partner = partner;
+      }
+
       warehouse.name = updateWarehouseDto.name;
       warehouse.address = updateWarehouseDto.address;
       warehouse.type = updateWarehouseDto.type;
@@ -88,6 +118,9 @@ export class WarehouseService {
       warehouse.availability = updateWarehouseDto.availability;
       return this.warehouseRepository.save(warehouse);
     } catch (e) {
+      if (e instanceof ApplicationException) {
+        throw e;
+      }
       Logger.error('[Error] - ', e.message, null, null, true);
       throw new ApplicationException(
         HttpStatus.BAD_REQUEST,

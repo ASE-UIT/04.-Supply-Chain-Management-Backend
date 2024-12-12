@@ -7,9 +7,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { Warehouse } from './warehouse.entity';
+import { LegalPerson } from './legal_person.entity';
+import { Vehicle } from './vehicle.entity';
 
 @Entity()
 export class Partner {
@@ -28,11 +32,18 @@ export class Partner {
   @Column()
   phoneNumber: string;
 
+  @OneToOne(() => LegalPerson, (legalPerson) => legalPerson.partner)
+	@JoinColumn()
+  legalPerson: LegalPerson;
+
   @OneToMany(() => Product, (product) => product.partner)
   products: Product[];
 
   @OneToMany(() => Warehouse, (warehouse) => warehouse.partner)
   warehouses: Warehouse[];
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.partner)
+  vehicles: Vehicle[];
   
   @CreateDateColumn()
   createdAt!: Date;
