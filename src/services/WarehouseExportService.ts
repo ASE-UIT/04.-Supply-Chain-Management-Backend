@@ -32,7 +32,7 @@ export class WarehouseExportService {
   async createFromOrder(orderId: number): Promise<any> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
-      relations: ['items', 'customer', 'items.product', 'items.product.product', 'items.product.product.warehouse'],
+      relations: ['items', 'customer', 'items.product', 'items.product.product', 'items.product.warehouse'],
     });
 
     if (!order) {
@@ -42,7 +42,7 @@ export class WarehouseExportService {
       );
     }
 
-    if (order.status !== 'APPROVED') {
+    if (order.status !== 'CONFIRMED') {
       throw new ApplicationException(
         HttpStatus.BAD_REQUEST,
         MessageCode.ORDER_STATUS_INVALID,
@@ -61,7 +61,7 @@ export class WarehouseExportService {
 
     for (const item of order.items) {
       data[item.product.warehouse.id] = [
-        ...data[item.product.warehouse.id],
+        ...(data ? (data[item.product.warehouse.id] || []) : []),
         {
           productId: item.product.product.id,
           quantityDocument: item.quantity,
@@ -80,6 +80,8 @@ export class WarehouseExportService {
 
       await this.create(newDto);
     }
+
+    return { message: 'Create warehouse export order successfully' };
   }
 
   async create(
@@ -99,15 +101,16 @@ export class WarehouseExportService {
       }
 
       const createdBy = await this.userRepository.findOne({
+        where: {},
         withDeleted: false,
       });
 
-      if (!createdBy) {
-        throw new ApplicationException(
-          HttpStatus.BAD_REQUEST,
-          MessageCode.PARTNER_NOT_FOUND,
-        );
-      }
+      // if (!createdBy) {
+      //   throw new ApplicationException(
+      //     HttpStatus.BAD_REQUEST,
+      //     MessageCode.PARTNER_NOT_FOUND,
+      //   );
+      // }
 
       const { items: warehouseExportItems, ...data } = dto;
 
@@ -202,16 +205,12 @@ export class WarehouseExportService {
         );
       }
 
-      const warehouse = warehouseExport.warehouse;
-      const items = warehouseExport.items;
-      for (const item of items) {
-        const product = item.product;
-
-        const warehouseProduct = await this.warehouseProductRepository.findOne({
-          relations: ['product', 'warehouse'],
-          where: { warehouse, product },
-          withDeleted: false,
-        });
+      for (const item of warehouseExport.items) {
+        const warehouseProduct = await this.warehouseProductRepository.createQueryBuilder('warehouse_product')
+          .where('warehouse_product."warehouseId" = :warehouseId', { warehouseId: warehouseExport.warehouse.id })
+          .andWhere('warehouse_product."productId" = :productId', { productId: item.product.id })
+          .andWhere('warehouse_product."deletedAt" IS NULL')
+          .getOne();
 
         if (!warehouseProduct) {
           throw new ApplicationException(
@@ -235,6 +234,9 @@ export class WarehouseExportService {
 
       return await this.warehouseExportRepository.save(warehouseExport);
     } catch (e) {
+      if (e instanceof ApplicationException) {
+        throw e;
+      }
       Logger.error('[Error] - ', e.message, null, null, true);
       throw new ApplicationException(
         HttpStatus.BAD_REQUEST,
@@ -244,7 +246,7 @@ export class WarehouseExportService {
   }
 
   async findAll() {
-    return await this.warehouseExportRepository.find({ withDeleted: false });
+    return await this.warehouseExportRepository.find({ withDeleted: false, relations: ['items', 'warehouse', 'items.product'] });
   }
 
   async findById(id: number) {

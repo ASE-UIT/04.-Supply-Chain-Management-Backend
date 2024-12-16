@@ -49,6 +49,7 @@ export class OrderService {
     }
 
     const createdBy = await this.userRepository.findOne({
+      where: {},
       withDeleted: false,
     });
 
@@ -64,14 +65,14 @@ export class OrderService {
     const orderEntity = await this.orderRepository.save(order);
     let totalPrice = 0;
     for (const item of orderDto.items) {
-      const product = await this.warehouseProductRepository.findOne({ where: { id: item.warehouseProductId }, withDeleted: false });
+      const product = await this.warehouseProductRepository.findOne({ where: { id: item.warehouseProductId }, relations: ['product'], withDeleted: false });
       const orderItem = this.orderItemRepository.create({
         order: orderEntity,
         product: product,
         quantity: item.quantity,
       });
       totalPrice += product.product.unitPrice * item.quantity;
-      await this.orderItemRepository.save(orderItem);
+      orderEntity.items.push(await this.orderItemRepository.save(orderItem));
     }
 
     orderEntity.total = totalPrice;

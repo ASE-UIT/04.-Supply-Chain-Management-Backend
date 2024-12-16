@@ -25,7 +25,7 @@ export class WarehouseImportService {
     ) { }
 
     async listWarehouseImports(): Promise<WarehouseImportOrder[]> {
-        return this.warehouseImportRepository.find({ relations: ['warehouse', 'items'], withDeleted: false });
+        return this.warehouseImportRepository.find({ relations: ['warehouse', 'items', 'items.product'], withDeleted: false });
     }
 
     async getWarehouseImportById(warehouseImportId: number): Promise<WarehouseImportOrder> {
@@ -51,6 +51,7 @@ export class WarehouseImportService {
         }
 
         const createdBy = await this.userRepository.findOne({
+            where: {},
             withDeleted: false,
         });
 
@@ -88,7 +89,7 @@ export class WarehouseImportService {
     async approveWarehouseImport(warehouseImportId: number): Promise<WarehouseImportOrder> {
         const warehouseImport = await this.warehouseImportRepository.findOne({
             where: { id: warehouseImportId },
-            relations: ['warehouse', 'items'],
+            relations: ['warehouse', 'items', 'items.product'],
         });
 
         if (!warehouseImport) {
@@ -98,11 +99,16 @@ export class WarehouseImportService {
         warehouseImport.status = 'APPROVED';
 
         for (const item of warehouseImport.items) {
-            const warehouseProduct = await this.warehouseProductRepository.findOne({
-                relations: ['product', 'warehouse'],
-                where: { product: item.product, warehouse: warehouseImport.warehouse },
-                withDeleted: false,
-            });
+            // const warehouseProduct = await this.warehouseProductRepository.findOne({
+            //     relations: ['product', 'warehouse'],
+            //     where: { product: item.product, warehouse: warehouseImport.warehouse },
+            //     withDeleted: false,
+            // });
+            const warehouseProduct = await this.warehouseProductRepository.createQueryBuilder('warehouse_product')
+                .where('warehouse_product."warehouseId" = :warehouseId', { warehouseId: warehouseImport.warehouse.id })
+                .andWhere('warehouse_product."productId" = :productId', { productId: item.product.id })
+                .andWhere('warehouse_product."deletedAt" IS NULL')
+                .getOne();
 
             if (!warehouseProduct) {
                 await this.warehouseProductRepository.save({
