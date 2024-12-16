@@ -26,6 +26,9 @@ export class Order {
   @Column()
   status: string;
 
+  @Column({ type: 'float', default: 0 })
+  total: number;
+
   @OneToMany(() => OrderItem, (item) => item.order)
   items: OrderItem[];
 

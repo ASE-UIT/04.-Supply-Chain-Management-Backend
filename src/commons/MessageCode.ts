@@ -53,4 +53,9 @@ export enum MessageCode {
 
 	WAREHOUSE_EXPORT_ITEM_NOT_FOUND = 'Không tìm thấy thông tin sản phẩm xuất kho này',
 	CANNOT_UPDATE_WAREHOUSE_CAPACITY = "Không thể cập nhật dung lượng kho vì dung lượng mới nhỏ hơn dung lượng khả dụng hiện tại",
+    CUSTOMER_NOT_FOUND = "Không tìm thấy thông tin khách hàng",
+    WAREHOUSE_EXPORT_ITEM_QUANTITY_INVALID = "Số lượng xuất không hợp lệ",
+    CANNOT_APPROVE_WAREHOUSE_EXPORT_ORDER = "Không thể duyệt đơn xuất kho này",
+    WAREHOUSE_EXPORT_ORDER_STATUS_INVALID = "WAREHOUSE_EXPORT_ORDER_STATUS_INVALID",
+    ORDER_STATUS_INVALID = "ORDER_STATUS_INVALID",
 }

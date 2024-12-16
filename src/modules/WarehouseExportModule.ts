@@ -8,6 +8,8 @@ import { Partner } from 'src/entities/partner.entity';
 import { WarehouseExportController } from 'src/controllers/WarehouseExportController';
 import { WarehouseExportService } from 'src/services/WarehouseExportService';
 import { Product } from '@scm/entities/product.entity';
+import { WarehouseProduct } from '@scm/entities/warehouse_product.entity';
+import { Order } from '@scm/entities/order.entity';
 
 
 @Module({
@@ -16,13 +18,15 @@ import { Product } from '@scm/entities/product.entity';
       WarehouseExportOrder,
       WarehouseExportItem,
       Warehouse,
-      User, 
+      User,
       Partner,
       Product,
+      WarehouseProduct,
+      Order,
     ]),
   ],
   controllers: [WarehouseExportController],
   providers: [WarehouseExportService],
-  exports: [WarehouseExportService], 
+  exports: [WarehouseExportService],
 })
-export class WarehouseExportModule {}
+export class WarehouseExportModule { }

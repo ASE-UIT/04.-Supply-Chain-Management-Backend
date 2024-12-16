@@ -12,6 +12,9 @@ import { Partner } from '@scm/entities/partner.entity';
 import { Product } from '@scm/entities/product.entity';
 import { User } from '@scm/entities/user.entity';
 import { DeepPartial, Repository } from 'typeorm';
+import { WarehouseProduct } from '@scm/entities/warehouse_product.entity';
+import { Order } from '@scm/entities/order.entity';
+import { WarehouseDocumentStatusEnum } from '@scm/enums/WarehouseDocumentEnum';
 
 @Injectable()
 export class WarehouseExportService {
@@ -22,7 +25,62 @@ export class WarehouseExportService {
     @InjectRepository(Partner) private readonly partnerRepository: Repository<Partner>,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Product) private readonly productRepository: Repository<Product>,
+    @InjectRepository(WarehouseProduct) private readonly warehouseProductRepository: Repository<WarehouseProduct>,
+    @InjectRepository(Order) private readonly orderRepository: Repository<Order>,
   ) { }
+
+  async createFromOrder(orderId: number): Promise<any> {
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+      relations: ['items', 'customer', 'items.product', 'items.product.product', 'items.product.product.warehouse'],
+    });
+
+    if (!order) {
+      throw new ApplicationException(
+        HttpStatus.BAD_REQUEST,
+        MessageCode.ORDER_NOT_FOUND,
+      );
+    }
+
+    if (order.status !== 'APPROVED') {
+      throw new ApplicationException(
+        HttpStatus.BAD_REQUEST,
+        MessageCode.ORDER_STATUS_INVALID,
+      );
+    }
+
+    const dto: Warehouse_ExportProductsDto = {
+      name: `PXK-${order.id}`,
+      warehouseId: null,
+      exportDate: new Date(),
+      status: WarehouseDocumentStatusEnum.DRAFT,
+      items: [],
+    }
+
+    let data = {};
+
+    for (const item of order.items) {
+      data[item.product.warehouse.id] = [
+        ...data[item.product.warehouse.id],
+        {
+          productId: item.product.product.id,
+          quantityDocument: item.quantity,
+          quantityActual: item.quantity,
+        },
+      ];
+    }
+
+    for (const warehouseId in data) {
+      const newDto: Warehouse_ExportProductsDto = {
+        ...dto,
+        warehouseId: parseInt(warehouseId),
+        name: `${dto.name}-${warehouseId}`,
+        items: data[warehouseId]
+      };
+
+      await this.create(newDto);
+    }
+  }
 
   async create(
     dto: Warehouse_ExportProductsDto,
@@ -75,18 +133,41 @@ export class WarehouseExportService {
           );
         }
 
+        // const warehouseProduct = await this.warehouseProductRepository.findOne({
+        //   relations: ['product', 'warehouse'],
+        //   where: { warehouse, product },
+        //   withDeleted: false,
+        // });
+
+        // if (!warehouseProduct) {
+        //   throw new ApplicationException(
+        //     HttpStatus.BAD_REQUEST,
+        //     MessageCode.PRODUCT_NOT_FOUND,
+        //   );
+        // }
+
+        // if (warehouseProduct.amount < item.quantityActual) {
+        //   throw new ApplicationException(
+        //     HttpStatus.BAD_REQUEST,
+        //     MessageCode.WAREHOUSE_EXPORT_ITEM_QUANTITY_INVALID,
+        //   );
+        // }
+
+        // warehouseProduct.amount -= item.quantityActual;
+
         const warehouseETE = await this.warehouseExportItemRepository.create({
-          unitPrice: item.unitPrice,
+          unitPrice: product.unitPrice,
           quantityDocument: item.quantityDocument,
           quantityActual: item.quantityActual,
           order: warehouseExportEntity,
           product: product,
         });
 
-        await this.warehouseExportItemRepository.save(warehouseETE);
+        // await this.warehouseProductRepository.save(warehouseProduct);
+        warehouseExportEntity.items.push(await this.warehouseExportItemRepository.save(warehouseETE));
       }
 
-      return warehouseExportEntity;
+      return await this.warehouseExportRepository.save(warehouseExportEntity);
     } catch (e) {
       if (e instanceof ApplicationException) {
         throw e;
@@ -95,6 +176,69 @@ export class WarehouseExportService {
       throw new ApplicationException(
         HttpStatus.BAD_REQUEST,
         MessageCode.CANNOT_CREATE_WAREHOUSE_EXPORT_ORDER,
+      );
+    }
+  }
+
+  async approveExport(id: number): Promise<WarehouseExportOrder> {
+    try {
+      const warehouseExport = await this.warehouseExportRepository.findOne({
+        where: { id },
+        relations: ['items', 'warehouse', 'items.product'],
+        withDeleted: false
+      });
+
+      if (!warehouseExport) {
+        throw new ApplicationException(
+          HttpStatus.BAD_REQUEST,
+          MessageCode.WAREHOUSE_EXPORT_ORDER_NOT_FOUND,
+        );
+      }
+
+      if (warehouseExport.status !== WarehouseDocumentStatusEnum.DRAFT) {
+        throw new ApplicationException(
+          HttpStatus.BAD_REQUEST,
+          MessageCode.WAREHOUSE_EXPORT_ORDER_STATUS_INVALID,
+        );
+      }
+
+      const warehouse = warehouseExport.warehouse;
+      const items = warehouseExport.items;
+      for (const item of items) {
+        const product = item.product;
+
+        const warehouseProduct = await this.warehouseProductRepository.findOne({
+          relations: ['product', 'warehouse'],
+          where: { warehouse, product },
+          withDeleted: false,
+        });
+
+        if (!warehouseProduct) {
+          throw new ApplicationException(
+            HttpStatus.BAD_REQUEST,
+            MessageCode.PRODUCT_NOT_FOUND,
+          );
+        }
+
+        if (warehouseProduct.amount < item.quantityActual) {
+          throw new ApplicationException(
+            HttpStatus.BAD_REQUEST,
+            MessageCode.WAREHOUSE_EXPORT_ITEM_QUANTITY_INVALID,
+          );
+        }
+
+        warehouseProduct.amount -= item.quantityActual;
+        await this.warehouseProductRepository.save(warehouseProduct);
+      }
+      warehouseExport.status = WarehouseDocumentStatusEnum.APPROVED;
+      warehouseExport.updatedAt = new Date();
+
+      return await this.warehouseExportRepository.save(warehouseExport);
+    } catch (e) {
+      Logger.error('[Error] - ', e.message, null, null, true);
+      throw new ApplicationException(
+        HttpStatus.BAD_REQUEST,
+        MessageCode.CANNOT_APPROVE_WAREHOUSE_EXPORT_ORDER,
       );
     }
   }

@@ -13,15 +13,15 @@ export class Product_CreateDto {
     @IsNumber()
     readonly ownerId: number;
 
-    @ApiProperty({ type: Number, required: true })
-    @IsNotEmpty()
-    @IsNumber()
-    readonly quantity: number;
-
     @ApiProperty({ type: String, required: true })
     @IsNotEmpty()
     @IsString()
     readonly unit: string;
+
+    @ApiProperty({ type: Number, required: true })
+    @IsNotEmpty()
+    @IsNumber()
+    readonly unitPrice: number;
 
     @ApiProperty({ type: String, required: true })
     @IsNotEmpty()

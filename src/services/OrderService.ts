@@ -7,6 +7,7 @@ import { OrderItem } from '@scm/entities/order_item.entity';
 import { Product } from '@scm/entities/product.entity';
 import { User } from '@scm/entities/user.entity';
 import { Warehouse } from '@scm/entities/warehouse.entity';
+import { WarehouseProduct } from '@scm/entities/warehouse_product.entity';
 import PDFDocument from 'pdfkit';
 import { Repository } from 'typeorm';
 
@@ -15,7 +16,7 @@ export class OrderService {
   constructor(
     @InjectRepository(Order) private readonly orderRepository: Repository<Order>,
     @InjectRepository(Customer) private readonly customerRepository: Repository<Customer>,
-    @InjectRepository(Product) private readonly productRepository: Repository<Product>,
+    @InjectRepository(WarehouseProduct) private readonly warehouseProductRepository: Repository<WarehouseProduct>,
     @InjectRepository(Warehouse) private readonly warehouseRepository: Repository<Warehouse>,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(OrderItem) private readonly orderItemRepository: Repository<OrderItem>,
@@ -55,22 +56,26 @@ export class OrderService {
       customer,
       name,
       remark,
-      status,
+      status: 'DRAFT',
       createdBy,
       items: [],
     });
 
     const orderEntity = await this.orderRepository.save(order);
-
+    let totalPrice = 0;
     for (const item of orderDto.items) {
-      const product = await this.productRepository.findOne({ where: { id: item.productId }, withDeleted: false });
+      const product = await this.warehouseProductRepository.findOne({ where: { id: item.warehouseProductId }, withDeleted: false });
       const orderItem = this.orderItemRepository.create({
         order: orderEntity,
         product: product,
         quantity: item.quantity,
       });
+      totalPrice += product.product.unitPrice * item.quantity;
       await this.orderItemRepository.save(orderItem);
     }
+
+    orderEntity.total = totalPrice;
+    await this.orderRepository.save(orderEntity);
 
     return orderEntity;
   }

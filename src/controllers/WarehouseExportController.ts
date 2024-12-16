@@ -24,6 +24,16 @@ export class WarehouseExportController {
     return res.status(HttpStatus.OK).json(await this.warehouseExportService.create(WarehouseExportOrder));
   }
 
+  @Post('/from-order/:id')
+  async createFromOrder(@Param('id') id: number, @Req() req, @Res() res) {
+    return res.status(HttpStatus.OK).json(await this.warehouseExportService.createFromOrder(id));
+  }
+
+  @Post('/:id/approve')
+  async approveExport(@Param('id') id: number, @Req() req, @Res() res) {
+    return res.status(HttpStatus.OK).json(await this.warehouseExportService.approveExport(id));
+  }
+
   @Put('/:id')
   async update(@Param('id') id: number, @Body() WarehouseExportOrder: Warehouse_UpdateExportOrderDto, @Req() req, @Res() res) {
     return res.status(HttpStatus.OK).json(await this.warehouseExportService.update(id, WarehouseExportOrder));

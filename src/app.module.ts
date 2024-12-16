@@ -11,6 +11,8 @@ import { ProductModule } from './modules/ProductModule';
 import { VehicleModule } from './modules/VehicleModule';
 import { WarehouseModule } from './modules/WarehouseModule';
 import { WarehouseExportModule } from './modules/WarehouseExportModule';
+import { WarehouseImportModule } from './modules/WarehouseImportModule';
+import { CustomerModule } from './modules/CustomerModule';
 
 @Module({
   imports: [
@@ -25,12 +27,14 @@ import { WarehouseExportModule } from './modules/WarehouseExportModule';
     }),
     LegalPersonModule,
     PartnerModule,
-    WarehouseModule,
+    CustomerModule,
     ProductModule,
+    WarehouseModule,
     OrderModule,
+    WarehouseImportModule,
+    WarehouseExportModule,
     VehicleModule,
     DriverModule,
-    WarehouseExportModule
   ],
 })
 export class AppModule { }

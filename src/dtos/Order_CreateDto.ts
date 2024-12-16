@@ -3,7 +3,7 @@ import { OrderStatusEnum } from '@scm/enums/OrderStatusEnum';
 
 class OrderItem_Dto {
   @ApiProperty({ type: Number, required: true })
-  readonly productId: number;
+  readonly warehouseProductId: number;
 
   @ApiProperty({ type: Number, required: true })
   readonly quantity: number;

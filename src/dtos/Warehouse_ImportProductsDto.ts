@@ -7,7 +7,7 @@ export class Warehouse_ImportItemDto {
     @ApiProperty({ type: Number, required: true })
     @IsNotEmpty()
     @IsNumber()
-    readonly productId: string;
+    readonly productId: number;
 
     @ApiProperty({ type: Number, required: true })
     @IsNotEmpty()

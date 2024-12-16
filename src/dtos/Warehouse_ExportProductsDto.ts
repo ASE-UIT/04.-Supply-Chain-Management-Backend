@@ -12,11 +12,6 @@ export class Warehouse_ExportItemDto {
   @ApiProperty({ type: Number, required: true })
   @IsNotEmpty()
   @IsNumber()
-  readonly unitPrice: number;
-
-  @ApiProperty({ type: Number, required: true })
-  @IsNotEmpty()
-  @IsNumber()
   readonly quantityDocument: number;
 
   @ApiProperty({ type: Number, required: true })

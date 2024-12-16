@@ -40,9 +40,9 @@ export class ProductService {
 
     return await this.productModel.save({
       name: product.name,
-      quantity: product.quantity,
       unit: product.unit,
       status: product.status,
+      unitPrice: product.unitPrice,
       type: product.type,
       size: product.size,
       weight: product.weight,
@@ -71,8 +71,8 @@ export class ProductService {
     }
 
     productToUpdate.name = product.name;
-    productToUpdate.quantity = product.quantity;
     productToUpdate.unit = product.unit;
+    productToUpdate.unitPrice = product.unitPrice;
     productToUpdate.status = product.status;
     productToUpdate.type = product.type;
     productToUpdate.size = product.size;

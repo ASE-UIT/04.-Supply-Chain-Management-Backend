@@ -11,10 +11,10 @@ export class Product {
   name: string;
 
   @Column()
-  quantity: number;
-
-  @Column()
   unit: string;
+
+  @Column({ nullable: true, type: 'float', default: 0 })
+  unitPrice: number;
 
   @Column()
   status: string;
