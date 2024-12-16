@@ -1,11 +1,8 @@
-import { WarehouseExportService } from '@scm/services/WarehouseExportService';
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Warehouse_ExportItemsDto } from '@scm/dtos/Warehouse_ExportItemsDto';
-import { Warehouse_CreateExportOrderDto } from '@scm/dtos/Warehouse_CreateExportOrderDto';
+import { Warehouse_ExportProductsDto } from '@scm/dtos/Warehouse_ExportProductsDto';
 import { Warehouse_UpdateExportOrderDto } from '@scm/dtos/Warehouse_UpdateExportOrderDto';
-import { WarehouseExportOrder } from '@scm/entities/warehouse_export_order.entity';
-import { Warehouse } from '@scm/entities/warehouse.entity';
+import { WarehouseExportService } from '@scm/services/WarehouseExportService';
 
 @ApiTags('warehouse-export')
 @Controller('warehouses-export')
@@ -23,18 +20,13 @@ export class WarehouseExportController {
   }
 
   @Post('/')
-  async create(@Body() WarehouseExportOrder: Warehouse_CreateExportOrderDto, @Req() req, @Res() res) {
+  async create(@Body() WarehouseExportOrder: Warehouse_ExportProductsDto, @Req() req, @Res() res) {
     return res.status(HttpStatus.OK).json(await this.warehouseExportService.create(WarehouseExportOrder));
   }
 
   @Put('/:id')
   async update(@Param('id') id: number, @Body() WarehouseExportOrder: Warehouse_UpdateExportOrderDto, @Req() req, @Res() res) {
     return res.status(HttpStatus.OK).json(await this.warehouseExportService.update(id, WarehouseExportOrder));
-  }
-
-  @Put('/status/id')
-  async approve(@Body() status: string, @Param('id') id: number, @Req() req, @Res() res) {
-    return res.status(HttpStatus.OK).json(await this.warehouseExportService.updateStatus(id, status));
   }
 
   @Delete('/:id')

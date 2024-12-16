@@ -1,8 +1,6 @@
 export enum WarehouseDocumentTypeEnum {
     EXPORT = 'EXPORT',
     IMPORT = 'IMPORT',
-
-
 }
 
 export enum WarehouseDocumentStatusEnum {

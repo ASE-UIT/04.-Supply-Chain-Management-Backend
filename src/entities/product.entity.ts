@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Partner } from './partner.entity';
+import { WarehouseProduct } from './warehouse_product.entity';
 
 @Entity()
 export class Product {
@@ -29,7 +30,10 @@ export class Product {
 
   @Column('float')
   weight: number;
-  
+
+  @OneToMany(() => WarehouseProduct, (product) => product.product)
+  warehouseProducts: WarehouseProduct[];
+
   @CreateDateColumn()
   createdAt!: Date;
 

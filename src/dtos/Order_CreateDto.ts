@@ -1,24 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OrderStatusEnum } from '@scm/enums/OrderStatusEnum';
 
-export class Order_CreateDto {
+class OrderItem_Dto {
   @ApiProperty({ type: Number, required: true })
   readonly productId: number;
 
   @ApiProperty({ type: Number, required: true })
-  readonly warehouseId: number;
+  readonly quantity: number;
+}
 
+export class Order_CreateDto {
   @ApiProperty({ type: Number, required: true })
-  readonly quantityInPaper: number;
+  readonly customerId: number;
 
-  @ApiProperty({ type: Number, required: true })
-  readonly quantityInReality: number;
+  @ApiProperty({ type: String, required: true })
+  readonly name: string;
 
-  @ApiProperty({ type: Number, required: true })
-  readonly unitPrice: number;
+  @ApiProperty({ type: String, required: true })
+  readonly remark: string;
 
-  @ApiProperty({ type: Number, required: true })
-  readonly totalPrice: number;
+  @ApiProperty({ type: String, required: true, enum: Object.values(OrderStatusEnum) })
+  readonly status: OrderStatusEnum;
 
-  @ApiProperty({ type: Date, required: true })
-  readonly importDate: Date;
+  @ApiProperty({ type: OrderItem_Dto, required: true, isArray: true })
+  readonly items: OrderItem_Dto[];
 }

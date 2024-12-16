@@ -7,6 +7,7 @@ import { User } from 'src/entities/user.entity';
 import { Partner } from 'src/entities/partner.entity';
 import { WarehouseExportController } from 'src/controllers/WarehouseExportController';
 import { WarehouseExportService } from 'src/services/WarehouseExportService';
+import { Product } from '@scm/entities/product.entity';
 
 
 @Module({
@@ -17,6 +18,7 @@ import { WarehouseExportService } from 'src/services/WarehouseExportService';
       Warehouse,
       User, 
       Partner,
+      Product,
     ]),
   ],
   controllers: [WarehouseExportController],

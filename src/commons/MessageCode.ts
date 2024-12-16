@@ -9,11 +9,11 @@ export enum MessageCode {
 	USER_INVALID_TOKEN = 'Token không hợp lệ hoặc đã hết hạn',
 
 	UNKNOWN_ERROR = 'Lỗi không xác định',
-    MISSING_REQUIRED_FIELD = "Thiếu thông tin bắt buộc",
+	MISSING_REQUIRED_FIELD = "Thiếu thông tin bắt buộc",
 	PLEASE_FILL_ALL_REQUIRED_FIELDS = 'Vui lòng điền đầy đủ thông tin',
-	
+
 	CANNOT_CREATE_WAREHOUSE = 'Không thể tạo thông tin kho lúc này',
-    WAREHOUSE_ALREADY_EXISTED = 'Kho này đã tồn tại, hãy tạo kho khác',
+	WAREHOUSE_ALREADY_EXISTED = 'Kho này đã tồn tại, hãy tạo kho khác',
 
 	CANNOT_RETRIEVE_PRODUCTS = 'Không thể trích xuất sản phẩm',
 	PRODUCT_NOT_FOUND = 'Không tìm thấy sản phẩm này',
@@ -52,4 +52,5 @@ export enum MessageCode {
 	WAREHOUSE_NOT_FOUND = 'Không tìm thấy kho này',
 
 	WAREHOUSE_EXPORT_ITEM_NOT_FOUND = 'Không tìm thấy thông tin sản phẩm xuất kho này',
+	CANNOT_UPDATE_WAREHOUSE_CAPACITY = "Không thể cập nhật dung lượng kho vì dung lượng mới nhỏ hơn dung lượng khả dụng hiện tại",
 }

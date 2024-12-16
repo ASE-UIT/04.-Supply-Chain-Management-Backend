@@ -1,9 +1,9 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Product } from './product.entity';
-import { WarehouseExportOrder } from './warehouse_export_order.entity';
+import { WarehouseImportOrder } from './warehouse_import_order.entity';
 
 @Entity()
-export class WarehouseExportItem {
+export class WarehouseImportItem {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,8 +19,8 @@ export class WarehouseExportItem {
   @ManyToOne(() => Product, product => product.id)
   product: Product;
 
-  @ManyToOne(() => WarehouseExportOrder, (order) => order.items)
-  order: WarehouseExportOrder;
+  @ManyToOne(() => WarehouseImportOrder, (order) => order.items)
+  order: WarehouseImportOrder;
 
   @CreateDateColumn()
   createdAt!: Date;

@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Partner } from './partner.entity';
-import { WarehouseExportOrder} from './warehouse_export_order.entity'
+import { WarehouseProduct } from './warehouse_product.entity';
 @Entity()
-export  class Warehouse {
+export class Warehouse {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,12 +11,6 @@ export  class Warehouse {
 
   @ManyToOne(() => Partner, (partner) => partner.warehouses)
   partner: Partner;
-
-  @OneToOne(() => WarehouseExportOrder, (doc) => doc.fromWarehouse)
-  exportFrom: WarehouseExportOrder;
-
-  @OneToOne(() => WarehouseExportOrder, (doc) => doc.toWarehouse)
-  exportTo: WarehouseExportOrder;
 
   @Column()
   address: string;
@@ -30,8 +24,14 @@ export  class Warehouse {
   @Column()
   capacity: number;
 
+  @Column({ default: 0 })
+  currentCapacity: number;
+
   @Column()
   availability: boolean;
+
+  @OneToMany(() => WarehouseProduct, (product) => product.warehouse)
+  products: WarehouseProduct[];
 
   @CreateDateColumn()
   createdAt!: Date;

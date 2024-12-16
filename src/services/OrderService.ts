@@ -1,52 +1,78 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Order_CreateDto } from '@scm/dtos/Order_CreateDto';
+import { Customer } from '@scm/entities/customer.entity';
 import { Order } from '@scm/entities/order.entity';
+import { OrderItem } from '@scm/entities/order_item.entity';
 import { Product } from '@scm/entities/product.entity';
+import { User } from '@scm/entities/user.entity';
 import { Warehouse } from '@scm/entities/warehouse.entity';
 import PDFDocument from 'pdfkit';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(Order) private readonly orderRepository: Repository<Order>,
+    @InjectRepository(Customer) private readonly customerRepository: Repository<Customer>,
     @InjectRepository(Product) private readonly productRepository: Repository<Product>,
     @InjectRepository(Warehouse) private readonly warehouseRepository: Repository<Warehouse>,
-  ) {}
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(OrderItem) private readonly orderItemRepository: Repository<OrderItem>,
+  ) { }
 
-  async createOrder(orderDto: {
-    productId: number;
-    warehouseId: number;
-    quantityInPaper: number;
-    quantityInReality: number;
-    unitPrice: number;
-  }): Promise<Order> {
-    const { productId, warehouseId, quantityInPaper, quantityInReality, unitPrice } = orderDto;
+  async listOrders(): Promise<Order[]> {
+    return this.orderRepository.find({ relations: ['customer', 'items'], withDeleted: false });
+  }
 
-    const product = await this.productRepository.findOne({ where: { id: productId } });
-    const warehouse = await this.warehouseRepository.findOne({ where: { id: warehouseId } });
+  async getOrderById(orderId: number): Promise<Order> {
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+      relations: ['customer', 'items'],
+    });
 
-    if (!product) {
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return order;
+  }
+
+  async createOrder(orderDto: Order_CreateDto): Promise<Order> {
+    const { customerId, name, remark, status, items } = orderDto;
+
+    const customer = await this.customerRepository.findOne({ where: { id: customerId }, withDeleted: false });
+
+    if (!customer) {
       throw new NotFoundException('Product not found');
     }
 
-    if (!warehouse) {
-      throw new NotFoundException('Warehouse not found');
-    }
-
-    const totalPrice = unitPrice * quantityInReality;
-
-    const order = this.orderRepository.create({
-      product,
-      warehouse,
-      quantityInPaper,
-      quantityInReality,
-      unitPrice,
-      totalPrice,
-      importDate: new Date(),
+    const createdBy = await this.userRepository.findOne({
+      withDeleted: false,
     });
 
-    return await this.orderRepository.save(order);
+    const order = this.orderRepository.create({
+      customer,
+      name,
+      remark,
+      status,
+      createdBy,
+      items: [],
+    });
+
+    const orderEntity = await this.orderRepository.save(order);
+
+    for (const item of orderDto.items) {
+      const product = await this.productRepository.findOne({ where: { id: item.productId }, withDeleted: false });
+      const orderItem = this.orderItemRepository.create({
+        order: orderEntity,
+        product: product,
+        quantity: item.quantity,
+      });
+      await this.orderItemRepository.save(orderItem);
+    }
+
+    return orderEntity;
   }
 
   async printOrderPdf(orderId: number): Promise<Buffer> {
@@ -68,13 +94,13 @@ export class OrderService {
     pdfDoc.fontSize(16).text('Order Details', { align: 'center' });
 
     pdfDoc.fontSize(12).text(`Order ID: ${order.id}`);
-    pdfDoc.text(`Product Name: ${order.product.name}`);
-    pdfDoc.text(`Warehouse Name: ${order.warehouse.name}`);
-    pdfDoc.text(`Quantity in Paper: ${order.quantityInPaper}`);
-    pdfDoc.text(`Quantity in Reality: ${order.quantityInReality}`);
-    pdfDoc.text(`Unit Price: ${order.unitPrice}`);
-    pdfDoc.text(`Total Price: ${order.totalPrice}`);
-    pdfDoc.text(`Import Date: ${order.importDate}`);
+    // pdfDoc.text(`Product Name: ${order.product.name}`);
+    // pdfDoc.text(`Warehouse Name: ${order.warehouse.name}`);
+    // pdfDoc.text(`Quantity in Paper: ${order.quantityInPaper}`);
+    // pdfDoc.text(`Quantity in Reality: ${order.quantityInReality}`);
+    // pdfDoc.text(`Unit Price: ${order.unitPrice}`);
+    // pdfDoc.text(`Total Price: ${order.totalPrice}`);
+    // pdfDoc.text(`Import Date: ${order.importDate}`);
 
     pdfDoc.end();
 
@@ -90,5 +116,15 @@ export class OrderService {
 
     order.status = 'CONFIRMED';
     return await this.orderRepository.save(order);
+  }
+
+  async deleteOrder(orderId: number): Promise<Order> {
+    const order = await this.orderRepository.findOne({ where: { id: orderId }, withDeleted: false });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return await this.orderRepository.softRemove(order);
   }
 }

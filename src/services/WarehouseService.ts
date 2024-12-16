@@ -1,12 +1,12 @@
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { MessageCode } from '@scm/commons/MessageCode';
 import { ApplicationException } from '@scm/controllers/ExceptionController';
 import { Warehouse_CreateWarehouseDto } from '@scm/dtos/Warehouse_CreateWarehouseDto';
-import { Warehouse } from '@scm/entities/warehouse.entity';
-import { HttpCode, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, Repository } from 'typeorm';
 import { Partner } from '@scm/entities/partner.entity';
+import { Warehouse } from '@scm/entities/warehouse.entity';
 import { PartnerTypeEnum } from '@scm/enums/PartnerTypeEnum';
+import { DeepPartial, Repository } from 'typeorm';
 
 @Injectable()
 export class WarehouseService {
@@ -30,7 +30,7 @@ export class WarehouseService {
         );
       }
 
-      if (partner.type !== PartnerTypeEnum.PARTNER_WAREHOUSE ) {
+      if (partner.type !== PartnerTypeEnum.PARTNER_WAREHOUSE) {
         throw new ApplicationException(
           HttpStatus.BAD_REQUEST,
           MessageCode.INVALID_PARTNER_TYPE,
@@ -44,6 +44,7 @@ export class WarehouseService {
         status: createWarehouseDto.status,
         capacity: createWarehouseDto.capacity,
         availability: createWarehouseDto.availability,
+        currentCapacity: createWarehouseDto.capacity,
         partner: partner,
       };
 
@@ -114,7 +115,16 @@ export class WarehouseService {
       warehouse.address = updateWarehouseDto.address;
       warehouse.type = updateWarehouseDto.type;
       warehouse.status = updateWarehouseDto.status;
-      warehouse.capacity = updateWarehouseDto.capacity;
+      if (updateWarehouseDto.capacity) {
+        if (updateWarehouseDto.capacity < warehouse.currentCapacity) {
+          throw new ApplicationException(
+            HttpStatus.BAD_REQUEST,
+            MessageCode.CANNOT_UPDATE_WAREHOUSE_CAPACITY,
+          );
+        }
+        warehouse.currentCapacity -= warehouse.capacity - updateWarehouseDto.capacity;
+        warehouse.capacity = updateWarehouseDto.capacity;
+      }
       warehouse.availability = updateWarehouseDto.availability;
       return this.warehouseRepository.save(warehouse);
     } catch (e) {
