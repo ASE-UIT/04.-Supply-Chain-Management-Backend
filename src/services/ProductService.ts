@@ -17,7 +17,7 @@ export class ProductService {
   ) { }
 
   async findAll(): Promise<Product[]> {
-    return await this.productModel.find({ withDeleted: false });
+    return await this.productModel.find({ withDeleted: false, relations: ['partner'] });
   }
 
   async findById(id: number): Promise<Product> {

@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { Warehouse } from './warehouse.entity';
@@ -32,7 +33,7 @@ export class Partner {
   @Column()
   phoneNumber: string;
 
-  @OneToOne(() => LegalPerson, (legalPerson) => legalPerson.partner)
+  @ManyToOne(() => LegalPerson, (legalPerson) => legalPerson.partner)
 	@JoinColumn()
   legalPerson: LegalPerson;
 

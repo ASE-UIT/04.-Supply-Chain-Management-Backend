@@ -65,11 +65,11 @@ export class WarehouseService {
   }
 
   async findAll() {
-    return await this.warehouseRepository.find({ withDeleted: false });
+    return await this.warehouseRepository.find({ withDeleted: false, relations: ['partner'] });
   }
 
   async findById(id: number) {
-    const warehoust = await this.warehouseRepository.findOne({ where: { id }, withDeleted: false });
+    const warehoust = await this.warehouseRepository.findOne({ where: { id }, relations: ['products', 'products.product'], withDeleted: false });
     if (!warehoust) {
       return 'Warehouse not found';
     }
